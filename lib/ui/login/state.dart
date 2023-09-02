@@ -1,9 +1,6 @@
-class LoginState {
-  LoginState init() {
-    return LoginState();
-  }
+enum AuthenticationStatus { authenticated, unauthenticated, unknown }
 
-  LoginState clone() {
-    return LoginState();
-  }
+class LoginState {
+  final AuthenticationStatus status;
+  const LoginState(this.status);
 }

@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 
 import '../../core/widgets/product_card_widget.dart';
 import '../../core/widgets/staggered_widget.dart';
-import '../product_detail/view.dart';
 
 class DressesWidget extends StatelessWidget {
   const DressesWidget({super.key});
@@ -24,7 +23,7 @@ class DressesWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           return ProductCardWidget(
             onTap: () {
-              Get.to(() => ProductDetailPage());
+              // Get.to(() => ProductDetailPage());
             },
           );
         },

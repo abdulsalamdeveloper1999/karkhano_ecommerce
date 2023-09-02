@@ -2,7 +2,6 @@ import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/elevated_button.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/textformfield.dart';
-import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,6 +11,8 @@ import '../signup/view.dart';
 import 'cubit.dart';
 
 class LoginPage extends StatelessWidget {
+  // LoginPage({required this.value});
+  // int value;
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -45,10 +46,12 @@ class LoginPage extends StatelessWidget {
                 ),
                 SizedBox(height: Get.height * 0.18),
                 MyField(
+                  controller: cubit.emailController,
                   hintText: 'Email',
                 ),
                 SizedBox(height: 16.sp),
                 MyField(
+                  controller: cubit.passwordController,
                   visibile: true,
                   hintText: 'Password',
                 ),
@@ -74,7 +77,10 @@ class LoginPage extends StatelessWidget {
                 MyButton(
                   text: 'Login',
                   onPress: () {
-                    Get.offAll(() => BottombarPage());
+                    cubit.signUp(context);
+                    // context.read<LoginCubit>().setUserLoggedIn(true);
+                    cubit.setUserLoggedIn(true);
+                    // Get.offAll(() => BottombarPage());
                   },
                 )
               ],

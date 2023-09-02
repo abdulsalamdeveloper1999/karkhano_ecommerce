@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "204269562942",
+    "project_id": "karkhanodropshipping",
+    "storage_bucket": "karkhanodropshipping.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204269562942:android:c473a2df17a0fc4dfa756f",
+        "android_client_info": {
+          "package_name": "com.example.e_commerce_store_karkhano"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "204269562942-45ihvfjgvf65vdsihvq67q05bvqd4i2a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKp_qdNd_9o4nzAIyoDtcM3hk1DqLLVWU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204269562942-45ihvfjgvf65vdsihvq67q05bvqd4i2a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,13 +1,28 @@
-class HomeState {
-  HomeState init() {
-    return HomeState();
-  }
+import '../../core/models/admin_model_data.dart';
 
-  HomeState clone() {
-    return HomeState();
-  }
+abstract class HomeState {}
+
+class HomeInitial extends HomeState {}
+
+class HomeLoaded extends HomeState {}
+
+class HomeGetLoaded extends HomeState {
+  final List<AdminModel> data;
+
+  HomeGetLoaded({required this.data});
 }
 
-class IntialClass extends HomeState {}
+class HomeDataError extends HomeState {
+  final String error;
 
-class LoadedClass extends HomeState {}
+  HomeDataError(this.error);
+}
+
+// Define events to trigger data retrieval
+abstract class DataEvent {}
+
+class FetchDataEvent extends DataEvent {
+  final String selectedCategory;
+
+  FetchDataEvent(this.selectedCategory);
+}
