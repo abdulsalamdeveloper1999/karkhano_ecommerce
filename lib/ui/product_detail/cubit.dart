@@ -1,17 +1,11 @@
-import 'dart:ui';
-
 import 'package:bloc/bloc.dart';
+import 'package:flutter/material.dart';
 
 import 'state.dart';
 
 class ProductDetailCubit extends Cubit<ProductDetailState> {
   ProductDetailCubit() : super(InitialState());
-  var sizeList = [
-    'S',
-    'M',
-    'L',
-    'XL',
-  ];
+  var sizeList = ['S', 'M', 'L', 'XL'];
 
   var colorList = [
     Color(0xff1B2028).withOpacity(0.30),
@@ -20,9 +14,13 @@ class ProductDetailCubit extends Cubit<ProductDetailState> {
   ];
   double ratingText = 0.0;
 
+  int currentPrice = 0;
+  int increasePrice = 0;
+
   void countIncrement() {
     final count = state.count + 1;
     var updateState = ProductDetailState(count: count);
+    currentPrice += increasePrice; // Add the current price to itself
     emit(updateState);
   }
 
@@ -31,11 +29,10 @@ class ProductDetailCubit extends Cubit<ProductDetailState> {
       // Check if count is greater than 0 before decrementing
       final count = state.count - 1;
       var updateState = ProductDetailState(count: count);
+      currentPrice -= increasePrice; // Add the current price to itself
       emit(updateState);
     }
   }
-
-  emit(updateState);
 
   void updateRating(value) {
     ratingText = value;

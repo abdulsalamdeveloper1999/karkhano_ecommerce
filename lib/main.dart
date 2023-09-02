@@ -1,37 +1,102 @@
-import 'package:e_commerce_store_karkhano/core/constants.dart';
-import 'package:e_commerce_store_karkhano/ui/splash/cubit.dart';
-import 'package:e_commerce_store_karkhano/ui/splash/view.dart';
+import 'dart:async';
+
+import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
+import 'package:e_commerce_store_karkhano/ui/home/cubit.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:get/get.dart';
 
-void main() {
+import 'core/constants.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late StreamSubscription<User?> user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    user.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       child: GetMaterialApp(
+        // initialRoute:
+        //     FirebaseAuth.instance.currentUser == null ? Welcome.id : ChatApp.id,
         theme: ThemeData(
           useMaterial3: true,
           fontFamily: 'EncodeSansMedium',
           primarySwatch: generateMaterialColor(kblack),
         ),
         debugShowCheckedModeBanner: false,
-        title: 'Counter App',
-        home: MultiBlocProvider(
-          providers: [
-            BlocProvider(
-              create: (context) => SplashCubit()..loadSplashData(),
-            ),
-          ],
-          child: SplashPage(),
+        // home: DropDownAndData(),
+        home: BlocProvider(
+          create: (context) => HomeCubit(),
+          child: BottombarPage(),
         ),
+        // home: FirebaseAuth.instance.currentUser == null
+        //     ? SplashPage()
+        //     : Add_dataPage()
+        // MultiBlocProvider(
+        //   providers: [
+        //     BlocProvider(
+        //       create: (context) => SplashCubit()..loadSplashData(),
+        //     ),
+        //     BlocProvider(
+        //       create: (context) => LoginCubit(),
+        //     )
+        //   ],
+        //   child: BlocBuilder<SplashCubit, SplashState>(
+        //     builder: (context, state) {
+        //       if (state is SplashLoaded) {
+        //         // Check authentication status and navigate accordingly
+        //         return BlocBuilder<LoginCubit, LoginState>(
+        //           builder: (context, loginState) {
+        //             if (loginState.status ==
+        //                 AuthenticationStatus.authenticated) {
+        //               return Add_dataPage();
+        //             } else {
+        //               return SplashPage();
+        //             }
+        //           },
+        //         );
+        //       } else {
+        //         return SplashPage(); // Show splash until data is loaded
+        //       }
+        //     },
+        //   ),
+        // ),
       ),
     );
   }
@@ -56,47 +121,3 @@ MaterialColor generateMaterialColor(Color color) {
   }
   return MaterialColor(color.value, swatch);
 }
-// class CounterScreen extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     final counterCubit = BlocProvider.of<CounterCubit>(context);
-//
-//     return Scaffold(
-//       appBar: AppBar(title: Text('Counter App')),
-//       body: Center(
-//         child: Column(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             Text(
-//               'Counter Value:',
-//               style: TextStyle(fontSize: 20),
-//             ),
-//             BlocBuilder<CounterCubit, int>(
-//               builder: (context, count) {
-//                 return Text(
-//                   '$count',
-//                   style: TextStyle(fontSize: 40),
-//                 );
-//               },
-//             ),
-//             SizedBox(height: 20),
-//             Row(
-//               mainAxisAlignment: MainAxisAlignment.center,
-//               children: [
-//                 ElevatedButton(
-//                   onPressed: () => counterCubit.increment(),
-//                   child: Text('Increment'),
-//                 ),
-//                 SizedBox(width: 20),
-//                 ElevatedButton(
-//                   onPressed: () => counterCubit.decrement(),
-//                   child: Text('Decrement'),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }

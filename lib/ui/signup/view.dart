@@ -43,14 +43,17 @@ class SignupPage extends StatelessWidget {
                 ),
                 SizedBox(height: Get.height * 0.18),
                 MyField(
+                  controller: cubit.nameController,
                   hintText: 'Name',
                 ),
                 SizedBox(height: 16.sp),
                 MyField(
+                  controller: cubit.emailController,
                   hintText: 'Email',
                 ),
                 SizedBox(height: 16.sp),
                 MyField(
+                  controller: cubit.passController,
                   visibile: true,
                   hintText: 'Password',
                 ),
@@ -75,7 +78,9 @@ class SignupPage extends StatelessWidget {
                 SizedBox(height: Get.height * 0.24),
                 MyButton(
                   text: 'SIGN UP',
-                  onPress: () {},
+                  onPress: () {
+                    cubit.createUser();
+                  },
                 )
               ],
             ),

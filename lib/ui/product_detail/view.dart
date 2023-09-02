@@ -1,9 +1,10 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
+import 'package:e_commerce_store_karkhano/core/models/admin_model_data.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:e_commerce_store_karkhano/ui/product_detail/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:readmore/readmore.dart';
@@ -12,6 +13,10 @@ import '../../core/widgets/back_button.dart';
 import 'cubit.dart';
 
 class ProductDetailPage extends StatelessWidget {
+  final AdminModel adminData; // Change the type to match your data type
+
+  ProductDetailPage({required this.adminData});
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -21,7 +26,16 @@ class ProductDetailPage extends StatelessWidget {
   }
 
   Widget _buildPage(BuildContext context) {
+    int adminDataLength = adminData.adminImages!.length; // Access the length
+
     final cubit = BlocProvider.of<ProductDetailCubit>(context);
+
+    cubit.currentPrice = adminData.adminPrice!;
+
+    cubit.increasePrice = adminData.adminPrice!;
+
+    List<String> imageUrls =
+        adminData.adminImages!.map((file) => file.path).toList();
 
     return SafeArea(
       child: Scaffold(
@@ -43,11 +57,16 @@ class ProductDetailPage extends StatelessWidget {
                 Icons.shopping_cart_outlined,
                 color: kwhite,
               ),
-              MyText(
-                text: 'Add to Cart | \$100.99',
-                color: kwhite,
-                size: 14.sp,
-                fontFamily: 'EncodeSansBold',
+              BlocConsumer<ProductDetailCubit, ProductDetailState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return MyText(
+                    text: 'Add to Cart | Rs. ${cubit.currentPrice}',
+                    color: kwhite,
+                    size: 14.sp,
+                    fontFamily: 'EncodeSansBold',
+                  );
+                },
               )
             ],
           ),
@@ -58,14 +77,17 @@ class ProductDetailPage extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 22.h),
-                PageViewWidget(),
+                PageViewWidget(
+                  length: imageUrls.length,
+                  imageUri: imageUrls,
+                ),
                 SizedBox(height: 24.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Expanded(
                       child: MyText(
-                        text: 'Modern light clothes',
+                        text: adminData.adminTitle!,
                         fontFamily: 'EncodeSansSemiBold',
                         size: 24.sp,
                       ),
@@ -119,43 +141,43 @@ class ProductDetailPage extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: 8.h),
-                Row(
-                  children: [
-                    RatingBar.builder(
-                      initialRating: 3,
-                      minRating: 1,
-                      glow: false,
-                      itemSize: 20,
-                      direction: Axis.horizontal,
-                      allowHalfRating: true,
-                      itemCount: 5,
-                      itemBuilder: (context, _) => Icon(
-                        Icons.star,
-                        color: Colors.amber,
-                        size: 25,
-                      ),
-                      onRatingUpdate: (rating) {
-                        cubit.updateRating(rating);
-                        print(cubit.ratingText);
-                      },
-                    ),
-                    SizedBox(width: 8),
-                    BlocConsumer<ProductDetailCubit, ProductDetailState>(
-                      listener: (context, state) {},
-                      builder: (context, state) {
-                        return MyText(
-                          text: '${cubit.ratingText}',
-                          fontFamily: 'EncodeSansRegular',
-                          color: Colors.grey,
-                          size: 12.sp,
-                        );
-                      },
-                    ),
-                  ],
-                ),
+                // Row(
+                //   children: [
+                //     RatingBar.builder(
+                //       initialRating: 3,
+                //       minRating: 1,
+                //       glow: false,
+                //       itemSize: 20,
+                //       direction: Axis.horizontal,
+                //       allowHalfRating: true,
+                //       itemCount: 5,
+                //       itemBuilder: (context, _) => Icon(
+                //         Icons.star,
+                //         color: Colors.amber,
+                //         size: 25,
+                //       ),
+                //       onRatingUpdate: (rating) {
+                //         cubit.updateRating(rating);
+                //         print(cubit.ratingText);
+                //       },
+                //     ),
+                //     SizedBox(width: 8),
+                //     BlocConsumer<ProductDetailCubit, ProductDetailState>(
+                //       listener: (context, state) {},
+                //       builder: (context, state) {
+                //         return MyText(
+                //           text: '${cubit.ratingText}',
+                //           fontFamily: 'EncodeSansRegular',
+                //           color: Colors.grey,
+                //           size: 12.sp,
+                //         );
+                //       },
+                //     ),
+                //   ],
+                // ),
                 SizedBox(height: 10.h),
                 ReadMoreText(
-                  'Its simple and elegant shape makes it perfect for those of you who like you who want minimalistclothes Its simple and elegant shape makes it perfect for those of you who like you who want minimalistclothes ',
+                  '${adminData.adminDescription}',
                   trimLines: 3,
                   style: TextStyle(
                     fontFamily: 'EncodeSansRegular',
@@ -179,74 +201,74 @@ class ProductDetailPage extends StatelessWidget {
                 ),
                 SizedBox(height: 16.h),
                 Divider(),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MyText(
-                          text: 'Choose Size',
-                          size: 12.sp,
-                          fontFamily: 'EncodeSansBold',
-                          color: kblack,
-                        ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            ...List.generate(
-                              cubit.sizeList.length,
-                              (index) => Container(
-                                margin: EdgeInsets.only(right: 8),
-                                height: 25,
-                                width: 25,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                child: Center(
-                                  child: MyText(
-                                    text: cubit.sizeList[index],
-                                    size: 12.sp,
-                                    fontFamily: 'EncodeSansRegular',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        MyText(
-                          text: 'Color',
-                          size: 12.sp,
-                          fontFamily: 'EncodeSansBold',
-                          color: kblack,
-                        ),
-                        SizedBox(height: 8.h),
-                        Row(
-                          children: [
-                            ...List.generate(
-                              cubit.colorList.length,
-                              (index) => Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: CircleAvatar(
-                                  radius: 15,
-                                  backgroundColor: cubit.colorList[index],
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //   children: [
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         MyText(
+                //           text: 'Choose Size',
+                //           size: 12.sp,
+                //           fontFamily: 'EncodeSansBold',
+                //           color: kblack,
+                //         ),
+                //         SizedBox(height: 8.h),
+                //         Row(
+                //           children: [
+                //             ...List.generate(
+                //               cubit.sizeList.length,
+                //               (index) => Container(
+                //                 margin: EdgeInsets.only(right: 8),
+                //                 height: 25,
+                //                 width: 25,
+                //                 decoration: BoxDecoration(
+                //                   shape: BoxShape.circle,
+                //                   border: Border.all(
+                //                     color: Colors.grey,
+                //                   ),
+                //                 ),
+                //                 child: Center(
+                //                   child: MyText(
+                //                     text: cubit.sizeList[index],
+                //                     size: 12.sp,
+                //                     fontFamily: 'EncodeSansRegular',
+                //                   ),
+                //                 ),
+                //               ),
+                //             ),
+                //           ],
+                //         )
+                //       ],
+                //     ),
+                //     Column(
+                //       crossAxisAlignment: CrossAxisAlignment.start,
+                //       children: [
+                //         MyText(
+                //           text: 'Color',
+                //           size: 12.sp,
+                //           fontFamily: 'EncodeSansBold',
+                //           color: kblack,
+                //         ),
+                //         SizedBox(height: 8.h),
+                //         Row(
+                //           children: [
+                //             ...List.generate(
+                //               cubit.colorList.length,
+                //               (index) => Padding(
+                //                 padding: const EdgeInsets.only(right: 8),
+                //                 child: CircleAvatar(
+                //                   radius: 15,
+                //                   backgroundColor: cubit.colorList[index],
+                //                 ),
+                //               ),
+                //             ),
+                //           ],
+                //         )
+                //       ],
+                //     )
+                //   ],
+                // ),
                 SizedBox(height: Get.height * 0.13),
               ],
             ),
@@ -258,7 +280,11 @@ class ProductDetailPage extends StatelessWidget {
 }
 
 class PageViewWidget extends StatelessWidget {
+  int length;
+  var imageUri;
   final PageController _pageController = PageController();
+
+  PageViewWidget({required this.length, required this.imageUri});
 
   @override
   Widget build(BuildContext context) {
@@ -278,13 +304,17 @@ class PageViewWidget extends StatelessWidget {
             onPageChanged: (page) {
               _cubit.updatePageView(page);
             },
-            itemCount: _cubit.totalPages,
+            itemCount: length,
             itemBuilder: (context, index) {
               return ClipRRect(
                 borderRadius: BorderRadius.circular(14),
-                child: Image.asset(
-                  _cubit.listImages[index],
+                child: CachedNetworkImage(
+                  // Use CachedNetworkImage here
+                  imageUrl: imageUri[index],
                   fit: BoxFit.fill,
+                  placeholder: (context, url) =>
+                      Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => Icon(Icons.error),
                 ),
               );
             },
@@ -296,7 +326,7 @@ class PageViewWidget extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                _cubit.totalPages,
+                length,
                 (index) {
                   return BlocConsumer<ProductDetailCubit, ProductDetailState>(
                     listener: (context, state) {},
