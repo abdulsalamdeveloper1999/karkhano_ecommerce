@@ -6,6 +6,7 @@ class AdminModel {
   String? adminTitle;
   String? adminDescription;
   int? adminPrice;
+  String? adminUid;
 
   AdminModel({
     this.adminCategory,
@@ -13,6 +14,7 @@ class AdminModel {
     this.adminTitle,
     this.adminDescription,
     this.adminPrice,
+    this.adminUid,
   });
 
   // Convert an AdminModel object to a Map
@@ -24,6 +26,7 @@ class AdminModel {
       'adminTitle': adminTitle,
       'adminDescription': adminDescription,
       'adminPrice': adminPrice,
+      'adminUid': adminUid,
     };
   }
 
@@ -34,6 +37,7 @@ class AdminModel {
     model.adminDescription =
         map['adminDescription'] ?? ''; // Use 'adminDescription' key
     model.adminPrice = map['adminPrice'] ?? ''; // Use 'adminPrice' key
+    model.adminUid = map['adminUid'] ?? '';
     List<String> imagePaths = List<String>.from(map['adminImages'] ?? []);
     model.adminImages = imagePaths.map((path) => File(path)).toList();
 

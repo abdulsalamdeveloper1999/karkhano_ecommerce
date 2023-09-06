@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:e_commerce_store_karkhano/ui/admin_panel/add_data/view.dart';
+import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ndialog/ndialog.dart';
@@ -53,7 +53,8 @@ class LoginCubit extends Cubit<LoginState> {
 
       if (response.status) {
         pD.dismiss();
-        Get.offAll(() => Add_dataPage());
+        // Get.offAll(() => Add_dataPage());
+        Get.offAll(() => BottombarPage());
         debugPrint('Successfully account creat');
       } else {
         Future.delayed(Duration(seconds: 1)).then((value) {

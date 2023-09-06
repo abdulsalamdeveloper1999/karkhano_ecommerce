@@ -46,4 +46,12 @@ class HomeCubit extends Cubit<HomeState> {
       emit(HomeDataError('Error fetching data: $e'));
     }
   }
+
+  // void filterProductsByName(String name) async {
+  //   final dataToFilter = (state as HomeGetLoaded).data;
+  //   final filteredData = dataToFilter.where((product) =>
+  //       product.adminTitle!.toLowerCase().contains(name.toLowerCase()));
+  //
+  //   emit(HomeFiltered(filteredData: filteredData.toList()));
+  // }
 }

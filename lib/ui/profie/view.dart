@@ -1,7 +1,9 @@
 import 'package:e_commerce_store_karkhano/core/constants.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import '../../core/widgets/mytext.dart';
 import 'cubit.dart';
@@ -37,7 +39,8 @@ class ProfilePage extends StatelessWidget {
               SizedBox(height: 20),
               _buildProfileInfoRow('Name', 'John Doe'),
               SizedBox(height: 10),
-              _buildProfileInfoRow('Email', 'John@gmail.com'),
+              _buildProfileInfoRow(
+                  'Email', '${FirebaseAuth.instance.currentUser!.email}'),
               SizedBox(height: 10),
               _buildProfileInfoRow('Address', 'Peshawar Gul Bahar street 7'),
               SizedBox(height: 30),
@@ -48,7 +51,26 @@ class ProfilePage extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
                 ),
                 child: MyText(
-                  text: 'Edit Profile',
+                  text: 'Edit Address',
+                  color: kwhite,
+                  size: 16.sp,
+                ),
+              ),
+              SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.signOut();
+                  } catch (e) {
+                    Get.snackbar('Error', e.toString());
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kblack,
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                ),
+                child: MyText(
+                  text: 'Log Out',
                   color: kwhite,
                   size: 16.sp,
                 ),

@@ -7,7 +7,7 @@ class SplashCubit extends Cubit<SplashState> {
 
   void loadSplashData() {
     // Simulate loading
-    Future.delayed(Duration(seconds: 5), () {
+    Future.delayed(Duration(seconds: 2), () {
       emit(SplashLoaded());
     });
   }

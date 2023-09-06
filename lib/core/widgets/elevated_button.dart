@@ -42,12 +42,12 @@ class MyButton extends StatelessWidget {
         ],
       ),
       width: w,
-      height: h * 0.065,
+      height: h * 0.075,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           side: BorderSide(width: 1.0, color: bdcolor),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(20),
           ),
           elevation: 0,
           backgroundColor: bgcolor,

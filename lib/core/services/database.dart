@@ -2,21 +2,43 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_store_karkhano/core/models/admin_model_data.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 
 abstract class DSDataBase {
   Future<bool> add_data(Map<String, dynamic> data);
+  Future<List<String>> uploadImagesToFirebaseStorage(
+      List<File> images, String selectedOption);
+
+  Future<List<AdminModel>> getAdminData();
+
+  Future<List<AdminModel>> getData(String selectedCategory);
+
+  Future<bool> addHistory(Map<String, dynamic> data);
+
+  Future<bool> addfav(Map<String, dynamic> data, userUid);
+  Future<bool> deleteFav(useruid);
+
+  Future<List<AdminModel>> getFav();
 }
 
 class DataBaseServices extends DSDataBase {
+  final CollectionReference adminDataCollection =
+      FirebaseFirestore.instance.collection('adminData');
+
+  var userId = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  var uid = FirebaseFirestore.instance.collection('adminData').doc().id;
+  // var uid = FirebaseFirestore.instance.collection('adminData').doc().id;
   @override
   Future<bool> add_data(Map<String, dynamic> data) async {
     bool rsp = false;
+
     // var uid = _firestore.collection('adminData').doc().id;
-    print('${uid}@@@@@@@@@@@@@@@@@');
+    var uid = FirebaseFirestore.instance.collection('adminData').doc().id;
+    if (kDebugMode) {
+      print('${uid}@@@@@@@@@@@@@@@@@');
+    }
     data['uid'] = uid;
 
     await _firestore
@@ -26,10 +48,13 @@ class DataBaseServices extends DSDataBase {
         .then((v) => rsp = true)
         .onError((error, stackTrace) => rsp = false);
 
-    print('success%%%%%%%%%%%%%%%%%%%%%%55');
+    if (kDebugMode) {
+      print('success%%%%%%%%%%%%%%%%%%%%%%55');
+    }
     return rsp;
   }
 
+  @override
   Future<List<String>> uploadImagesToFirebaseStorage(
       List<File> images, String selectedOption) async {
     final List<String> downloadUrls = [];
@@ -86,13 +111,12 @@ class DataBaseServices extends DSDataBase {
         });
       }
     } catch (e) {
-      print('Error fetching data: $e');
+      if (kDebugMode) {
+        print('Error fetching data: $e');
+      }
     }
     return model;
   }
-
-  final CollectionReference adminDataCollection =
-      FirebaseFirestore.instance.collection('adminData');
 
   Future<List<AdminModel>> getData(String selectedCategory) async {
     Query query = adminDataCollection;
@@ -106,11 +130,97 @@ class DataBaseServices extends DSDataBase {
     List<AdminModel> retrievedData = [];
 
     querySnapshot.docs.forEach((document) {
-      AdminModel model =
-          AdminModel.fromMap(document.data() as Map<String, dynamic>);
+      AdminModel model = AdminModel.fromMap({
+        'adminUid': document.id, // Retrieve the document ID (which is the uid)
+        ...document.data() as Map<String, dynamic>,
+      });
       retrievedData.add(model);
     });
 
     return retrievedData;
+  }
+
+  Future<bool> addHistory(Map<String, dynamic> data) async {
+    var uid = FirebaseFirestore.instance.collection('adminData').doc().id;
+    bool rsp = false;
+    // var uid = _firestore.collection('adminData').doc().id;
+    if (kDebugMode) {
+      print('${uid}@@@@@@@@@@@@@@@@@');
+    }
+    data['uid'] = uid;
+
+    await _firestore
+        .collection('history')
+        .doc(uid)
+        .set(data)
+        .then((v) => rsp = true)
+        .onError((error, stackTrace) => rsp = false);
+
+    if (kDebugMode) {
+      print('success%%%%%%%%%%%%%%%%%%%%%%55');
+    }
+    return rsp;
+  }
+
+  Future<bool> addfav(Map<String, dynamic> data, userUid) async {
+    bool rsp = false;
+    // var uid = _firestore.collection('adminData').doc().id;
+    // print('${uid}@@@@@@@@@@@@@@@@@');
+    // data['uid'] = uid;
+
+    await _firestore
+        .collection('favorites')
+        .doc(userUid)
+        .set(data)
+        .then((v) => rsp = true)
+        .onError((error, stackTrace) => rsp = false);
+
+    if (kDebugMode) {
+      print('success%%%%%%%%%%%%%%%%%%%%%%55');
+
+      print(userUid);
+    }
+    return rsp;
+  }
+
+  Future<bool> deleteFav(useruid) async {
+    bool rsp = false;
+    // var uid = _firestore.collection('adminData').doc().id;
+    // print('${uid}@@@@@@@@@@@@@@@@@');
+    // data['uid'] = uid;
+
+    await _firestore
+        .collection('favorites')
+        .doc(useruid)
+        .delete()
+        .then((v) => rsp = true)
+        .onError((error, stackTrace) => rsp = false);
+
+    if (kDebugMode) {
+      print('success%%%%%%%%%%%%%%%%%%%%%%55');
+
+      print(useruid);
+    }
+
+    return rsp;
+  }
+
+  Future<List<AdminModel>> getFav() async {
+    List<AdminModel> model = [];
+    try {
+      var snapShot = await _firestore.collection("favorites").get();
+      if (snapShot.docs.isNotEmpty) {
+        snapShot.docs.forEach((element) {
+          AdminModel mdl = AdminModel.fromMap(element.data());
+
+          model.add(mdl);
+        });
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error fetching data: $e');
+      }
+    }
+    return model;
   }
 }

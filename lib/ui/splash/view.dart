@@ -70,13 +70,17 @@
 // }
 // // DiscountDirect
 // splash_page.dart
+import 'dart:async';
+
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
-import 'package:e_commerce_store_karkhano/ui/login/view.dart';
+import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
 import 'package:e_commerce_store_karkhano/ui/splash/state.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
 import 'cubit.dart';
 // Import the SplashCubit class
@@ -84,23 +88,54 @@ import 'cubit.dart';
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final cubit = BlocProvider.of<SplashCubit>(context);
     return BlocBuilder<SplashCubit, SplashState>(
       builder: (context, state) {
-        if (state is SplashInitial) {
-          // Display loading animation or image
-          return SplashView();
-        } else if (state is SplashLoaded) {
-          // Navigate to the main content screen
-          return LoginPage();
-        }
-        return Container(); // Handle other states if needed
+        cubit.loadSplashData();
+        return SplashView();
+        // if (state is SplashInitial) {
+        //   // Display loading animation or image
+        //   return SplashView();
+        // } else if (state is SplashLoaded) {
+        //   // Navigate to the main content screen
+        //   return LoginPage();
+        // }
+        // return Container(); // Handle other states if needed
       },
     );
   }
 }
 
-class SplashView extends StatelessWidget {
+class SplashView extends StatefulWidget {
   const SplashView({super.key});
+
+  @override
+  State<SplashView> createState() => _SplashViewState();
+}
+
+class _SplashViewState extends State<SplashView> {
+  late StreamSubscription<User?> user;
+
+  @override
+  void initState() {
+    super.initState();
+    user = FirebaseAuth.instance.authStateChanges().listen((user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        Future.delayed(Duration(seconds: 3)).then((value) {
+          Get.offAll(() => BottombarPage());
+        });
+        print('User is signed in!');
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    user.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +170,11 @@ class SplashView extends StatelessWidget {
                 ),
               ],
             ),
-            ThreeDotLoadingAnimation()
+            SizedBox(height: 16.h),
+            CircularProgressIndicator(
+              color: kwhite,
+            ),
+            // ThreeDotLoadingAnimation()
           ],
         ),
       ),

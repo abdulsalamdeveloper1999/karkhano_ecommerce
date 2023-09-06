@@ -26,6 +26,10 @@ class MyField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var kborder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: BorderSide(color: Colors.transparent),
+    );
     var kTextFormFieldStyle = TextStyle(
       color: kblack,
       fontFamily: 'EncodeSansRegular',
@@ -35,39 +39,27 @@ class MyField extends StatelessWidget {
       color: Color(0xff878787),
       fontFamily: 'EncodeSansRegular',
     );
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: kblack.withOpacity(0.2),
-            blurRadius: 5,
-          ),
-        ],
-        color: kwhite,
-      ),
-      child: TextFormField(
-        obscureText: visibile,
-        style: kTextFormFieldStyle,
-        validator: validator,
-        controller: controller,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: kwhite.withOpacity(0.4),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 5,
-          ),
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          border: InputBorder.none,
-          hintText: hintText,
-          hintStyle: kLighGreyStyle,
-          // labelStyle: kLighGreyStyle,
-          // labelText: hintText,
-          suffixIcon: suffixIcon,
-          prefixIcon: prefixIcon,
-        ),
+    return TextFormField(
+      obscureText: visibile,
+      style: kTextFormFieldStyle,
+      validator: validator,
+      controller: controller,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Color(0xffF5F5F5),
+        // contentPadding: EdgeInsets.symmetric(
+        //   horizontal: 20,
+        //   vertical: 5,
+        // ),
+        focusedBorder: kborder,
+        enabledBorder: kborder,
+        border: kborder,
+        hintText: hintText,
+        hintStyle: kLighGreyStyle,
+        // labelStyle: kLighGreyStyle,
+        // labelText: hintText,
+        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
       ),
     );
   }

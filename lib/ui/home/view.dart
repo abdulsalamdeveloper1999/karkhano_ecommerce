@@ -238,9 +238,11 @@ class ProductWidget extends StatelessWidget {
                 children: [
                   InkWell(
                     onTap: () {
-                      Get.to(() => ProductDetailPage(
-                            adminData: adminData[index],
-                          ));
+                      Get.to(
+                        () => ProductDetailPage(
+                          adminData: adminData[index],
+                        ),
+                      );
                     },
                     child: Column(
                       children: [
@@ -262,18 +264,6 @@ class ProductWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    right: 10,
-                    child: CircleAvatar(
-                      radius: 20,
-                      backgroundColor: kblack,
-                      child: Icon(
-                        Icons.favorite_border_rounded,
-                        color: kwhite,
-                      ),
-                    ),
-                  )
                 ],
               ),
             ),
@@ -289,13 +279,6 @@ class ProductWidget extends StatelessWidget {
                   size: 14.sp,
                   fontFamily: 'EncodeSansSemiBold',
                 ),
-                // SizedBox(height: 4.h),
-                // MyText(
-                //   text: 'Dress modern',
-                //   size: 10.sp,
-                //   fontFamily: 'EncodeSansRegular',
-                //   color: Color(0xffA4AAAD),
-                // ),
                 SizedBox(height: 8.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

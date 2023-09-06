@@ -1,7 +1,9 @@
 import 'dart:async';
 
-import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
 import 'package:e_commerce_store_karkhano/ui/home/cubit.dart';
+import 'package:e_commerce_store_karkhano/ui/product_detail/cubit.dart';
+import 'package:e_commerce_store_karkhano/ui/splash/cubit.dart';
+import 'package:e_commerce_store_karkhano/ui/splash/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -17,86 +19,81 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+class MyApp extends StatelessWidget {
+  MyApp({super.key});
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
   late StreamSubscription<User?> user;
 
-  @override
-  void initState() {
-    super.initState();
-    user = FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    user.cancel();
-    super.dispose();
-  }
-
+  // @override
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      child: GetMaterialApp(
-        // initialRoute:
-        //     FirebaseAuth.instance.currentUser == null ? Welcome.id : ChatApp.id,
-        theme: ThemeData(
-          useMaterial3: true,
-          fontFamily: 'EncodeSansMedium',
-          primarySwatch: generateMaterialColor(kblack),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => SplashCubit(),
         ),
-        debugShowCheckedModeBanner: false,
-        // home: DropDownAndData(),
-        home: BlocProvider(
+        BlocProvider(
           create: (context) => HomeCubit(),
-          child: BottombarPage(),
         ),
-        // home: FirebaseAuth.instance.currentUser == null
-        //     ? SplashPage()
-        //     : Add_dataPage()
-        // MultiBlocProvider(
-        //   providers: [
-        //     BlocProvider(
-        //       create: (context) => SplashCubit()..loadSplashData(),
-        //     ),
-        //     BlocProvider(
-        //       create: (context) => LoginCubit(),
-        //     )
-        //   ],
-        //   child: BlocBuilder<SplashCubit, SplashState>(
-        //     builder: (context, state) {
-        //       if (state is SplashLoaded) {
-        //         // Check authentication status and navigate accordingly
-        //         return BlocBuilder<LoginCubit, LoginState>(
-        //           builder: (context, loginState) {
-        //             if (loginState.status ==
-        //                 AuthenticationStatus.authenticated) {
-        //               return Add_dataPage();
-        //             } else {
-        //               return SplashPage();
-        //             }
-        //           },
-        //         );
-        //       } else {
-        //         return SplashPage(); // Show splash until data is loaded
-        //       }
-        //     },
-        //   ),
+        // BlocProvider(
+        //   create: (context) => CartCubit()..getCartItems(),
         // ),
+        BlocProvider(create: (BuildContext context) => ProductDetailCubit()),
+        /*BlocProvider(create: (BuildContext context) => DummyCubit())*/
+      ],
+      child: ScreenUtilInit(
+        child: GetMaterialApp(
+          // initialRoute:
+          //     FirebaseAuth.instance.currentUser == null ? Welcome.id : ChatApp.id,
+          theme: ThemeData(
+            useMaterial3: true,
+            fontFamily: 'EncodeSansMedium',
+            primarySwatch: generateMaterialColor(kblack),
+          ),
+          debugShowCheckedModeBanner: false,
+          // home: LoginPage(),
+          // home: DropDownAndData(),
+          home: SplashPage(),
+          // home: FirebaseAuth.instance.currentUser == null
+          //     ? SplashPage()
+          //     : BottombarPage()
+          // home: HomeScreenCart(),
+          // home: FirebaseAuth.instance.currentUser == null
+          //     ? SplashPage()
+          //     : Add_dataPage()
+          // MultiBlocProvider(
+          //   providers: [
+          //     BlocProvider(
+          //       create: (context) => SplashCubit()..loadSplashData(),
+          //     ),
+          //     BlocProvider(
+          //       create: (context) => LoginCubit(),
+          //     )
+          //   ],
+          //   child: BlocBuilder<SplashCubit, SplashState>(
+          //     builder: (context, state) {
+          //       if (state is SplashLoaded) {
+          //         // Check authentication status and navigate accordingly
+          //         return BlocBuilder<LoginCubit, LoginState>(
+          //           builder: (context, loginState) {
+          //             if (loginState.status ==
+          //                 AuthenticationStatus.authenticated) {
+          //               return Add_dataPage();
+          //             } else {
+          //               return SplashPage();
+          //             }
+          //           },
+          //         );
+          //       } else {
+          //         return SplashPage(); // Show splash until data is loaded
+          //       }
+          //     },
+          //   ),
+          // ),
+        ),
       ),
     );
   }
