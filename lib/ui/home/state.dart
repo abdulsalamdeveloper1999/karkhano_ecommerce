@@ -26,3 +26,9 @@ class FetchDataEvent extends DataEvent {
 
   FetchDataEvent(this.selectedCategory);
 }
+
+class HomeFiltered extends HomeState {
+  final List<AdminModel> filteredData;
+
+  HomeFiltered({required this.filteredData});
+}

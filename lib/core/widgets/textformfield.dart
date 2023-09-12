@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants.dart';
 
@@ -11,10 +12,11 @@ class MyField extends StatelessWidget {
       suffixIcon,
       hintstyle,
       controller,
-      validator,
-      visibile;
+      visibile,
+      keyboardType;
+
+  String? Function(String?)? validator;
   MyField({
-    Key? key,
     this.suffixIcon,
     this.visibile = false,
     this.controller,
@@ -22,12 +24,18 @@ class MyField extends StatelessWidget {
     this.hintstyle,
     this.prefixIcon,
     this.validator,
-  }) : super(key: key);
+    this.keyboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
+    var kborder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(15),
+      borderSide: BorderSide(color: Colors.transparent),
+    );
     var kTextFormFieldStyle = TextStyle(
       color: kblack,
+      fontSize: 14.sp,
       fontFamily: 'EncodeSansRegular',
     );
 
@@ -35,39 +43,28 @@ class MyField extends StatelessWidget {
       color: Color(0xff878787),
       fontFamily: 'EncodeSansRegular',
     );
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(15),
-        boxShadow: [
-          BoxShadow(
-            color: kblack.withOpacity(0.2),
-            blurRadius: 5,
-          ),
-        ],
-        color: kwhite,
-      ),
-      child: TextFormField(
-        obscureText: visibile,
-        style: kTextFormFieldStyle,
-        validator: validator,
-        controller: controller,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: kwhite.withOpacity(0.4),
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 5,
-          ),
-          focusedBorder: InputBorder.none,
-          enabledBorder: InputBorder.none,
-          border: InputBorder.none,
-          hintText: hintText,
-          hintStyle: kLighGreyStyle,
-          // labelStyle: kLighGreyStyle,
-          // labelText: hintText,
-          suffixIcon: suffixIcon,
-          prefixIcon: prefixIcon,
-        ),
+    return TextFormField(
+      keyboardType: keyboardType,
+      obscureText: visibile,
+      style: kTextFormFieldStyle,
+      validator: validator,
+      controller: controller,
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: Color(0xffF5F5F5),
+        // contentPadding: EdgeInsets.symmetric(
+        //   horizontal: 20,
+        //   vertical: 5,
+        // ),
+        focusedBorder: kborder,
+        enabledBorder: kborder,
+        border: kborder,
+        hintText: hintText,
+        hintStyle: kLighGreyStyle,
+        // labelStyle: kLighGreyStyle,
+        // labelText: hintText,
+        suffixIcon: suffixIcon,
+        prefixIcon: prefixIcon,
       ),
     );
   }

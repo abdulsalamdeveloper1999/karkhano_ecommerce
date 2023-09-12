@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../constants.dart';
-
 class MyText extends StatelessWidget {
   final String text;
   final double? size;
@@ -11,13 +9,17 @@ class MyText extends StatelessWidget {
   final decoration;
   final fontFamily;
   final maxLines;
+  final overflow;
+  final fontStyle;
 
   const MyText({
     super.key,
+    this.fontStyle,
+    this.overflow,
     required this.text,
     this.size = 14.0,
     this.weight = FontWeight.normal,
-    this.color = kblack,
+    this.color = Colors.black,
     this.align = TextAlign.left,
     this.decoration,
     this.fontFamily = 'EncodeSansMedium',
@@ -29,12 +31,13 @@ class MyText extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontSize: size,
-        fontWeight: weight,
-        color: color,
-        decoration: decoration,
-        fontFamily: fontFamily,
-      ),
+          fontStyle: fontStyle,
+          fontSize: size,
+          fontWeight: weight,
+          color: color,
+          decoration: decoration,
+          fontFamily: fontFamily,
+          overflow: overflow),
       textAlign: align,
       maxLines: maxLines,
     );

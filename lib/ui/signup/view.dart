@@ -1,9 +1,9 @@
+import 'package:e_commerce_store_karkhano/ui/signup/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../core/constants.dart';
 import '../../core/widgets/elevated_button.dart';
 import '../../core/widgets/mytext.dart';
 import '../../core/widgets/textformfield.dart';
@@ -21,72 +21,116 @@ class SignupPage extends StatelessWidget {
   Widget _buildPage(BuildContext context) {
     final cubit = BlocProvider.of<SignupCubit>(context);
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color(0xffF9F9F9),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 15,
-              vertical: 15,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Icon(Icons.arrow_back_ios),
-                SizedBox(height: 40.sp),
-                MyText(
-                  text: 'Sign Up',
-                  size: 32.sp,
-                  fontFamily: 'EncodeSansBold',
-                ),
-                SizedBox(height: Get.height * 0.18),
-                MyField(
-                  controller: cubit.nameController,
-                  hintText: 'Name',
-                ),
-                SizedBox(height: 16.sp),
-                MyField(
-                  controller: cubit.emailController,
-                  hintText: 'Email',
-                ),
-                SizedBox(height: 16.sp),
-                MyField(
-                  controller: cubit.passController,
-                  visibile: true,
-                  hintText: 'Password',
-                ),
-                SizedBox(height: 16.sp),
-                GestureDetector(
-                  onTap: () {
-                    Get.back();
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      MyText(
-                        text: 'Already have an account?',
+    return BlocBuilder<SignupCubit, SignupState>(
+      builder: (context, state) {
+        return SafeArea(
+          child: Scaffold(
+            backgroundColor: Color(0xffDCDBDC),
+            body: BlocConsumer<SignupCubit, SignupState>(
+              listener: (context, state) {},
+              builder: (context, state) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 15,
+                      vertical: 15,
+                    ),
+                    child: Form(
+                      key: cubit.formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Icon(Icons.arrow_back_ios),
+                          SizedBox(height: 40.sp),
+                          MyText(
+                            text: 'Sign Up',
+                            size: 32.sp,
+                            fontFamily: 'EncodeSansBold',
+                          ),
+                          SizedBox(height: Get.height * 0.1),
+                          MyField(
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'Required';
+                            //   }
+                            //   null;
+                            // },
+                            controller: cubit.nameController,
+                            hintText: 'Name',
+                          ),
+                          SizedBox(height: 16.sp),
+                          MyField(
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'Required';
+                            //   }
+                            //   null;
+                            // },
+                            controller: cubit.emailController,
+                            hintText: 'Email',
+                          ),
+                          SizedBox(height: 16.sp),
+                          MyField(
+                            visibile: true,
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'Required';
+                            //   }
+                            //   null;
+                            // },
+                            controller: cubit.passController,
+                            hintText: 'Password',
+                          ),
+                          SizedBox(height: 16.sp),
+                          MyField(
+                            keyboardType: TextInputType.number,
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'Required';
+                            //   }
+                            //   null;
+                            // },
+                            controller: cubit.numberController,
+                            hintText: 'Contact No.',
+                          ),
+                          SizedBox(height: 16.sp),
+                          MyField(
+                            // validator: (value) {
+                            //   if (value!.isEmpty) {
+                            //     return 'Required';
+                            //   }
+                            //   null;
+                            // },
+                            controller: cubit.addressController,
+                            hintText: 'Address',
+                          ),
+
+                          SizedBox(height: 16.h),
+                          BlocConsumer<SignupCubit, SignupState>(
+                            listener: (context, state) {
+                              // TODO: implement listener
+                            },
+                            builder: (context, state) {
+                              return MyButton(
+                                text: 'SIGN UP',
+                                onPress: () async {
+                                  cubit.createUserAndLogin(context);
+                                },
+                              );
+                            },
+                          ),
+                          SizedBox(height: 16.sp),
+                        ],
                       ),
-                      Icon(
-                        Icons.arrow_right_alt,
-                        color: kblack,
-                      )
-                    ],
+                    ),
                   ),
-                ),
-                SizedBox(height: Get.height * 0.24),
-                MyButton(
-                  text: 'SIGN UP',
-                  onPress: () {
-                    cubit.createUser();
-                  },
-                )
-              ],
+                );
+              },
             ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

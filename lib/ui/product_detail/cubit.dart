@@ -1,6 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce_store_karkhano/core/constants.dart';
+import 'package:e_commerce_store_karkhano/core/models/admin_model_data.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../core/models/shopping_cart_model.dart';
+import '../../core/services/database.dart';
+import '../profie/profile_controller.dart';
 import 'state.dart';
 
 class ProductDetailCubit extends Cubit<ProductDetailState> {
@@ -25,7 +31,7 @@ class ProductDetailCubit extends Cubit<ProductDetailState> {
   }
 
   void countDecrement() {
-    if (state.count > 0) {
+    if (state.count > 1) {
       // Check if count is greater than 0 before decrementing
       final count = state.count - 1;
       var updateState = ProductDetailState(count: count);
@@ -53,4 +59,62 @@ class ProductDetailCubit extends Cubit<ProductDetailState> {
     'assets/icons_images/img2.png',
     'assets/icons_images/img3.png',
   ];
+
+  List<ShoppingCartItemModel> cartItems = [];
+
+  void addToShoppingCart(selectedProduct) {
+    cartItems.add(selectedProduct);
+    emit(LoadedState());
+  }
+
+  void uploadFavorites(AdminModel adminData) async {
+    try {
+      final logic = Get.find<ProfileController>();
+
+      if (!logic.currentUserInfoList.isNotEmpty) {
+        // If the user is not signed in, show an error message
+        Get.snackbar(
+          'Error',
+          'Please sign in to add products to favorites',
+          colorText: kwhite,
+          backgroundColor:
+              Colors.red, // You can use a different color for error messages
+          duration: Duration(seconds: 2),
+        );
+        return; // Exit the function without performing any actions
+      }
+
+      if (isInFavorites) {
+        // If the product is already in favorites, remove it
+        await DataBaseServices().deleteFav(adminData.adminUid!);
+        print('Removed from favorites ${adminData.adminUid}');
+        Get.snackbar(
+          'Done',
+          'Product removed from favorites',
+          colorText: kwhite,
+          backgroundColor: kblack,
+          duration: Duration(seconds: 2),
+        );
+      } else {
+        // If the product is not in favorites, add it
+        await DataBaseServices().addfav(adminData.toMap(), adminData.adminUid!);
+        Get.snackbar(
+          'Done',
+          'Product added to favorites',
+          colorText: kwhite,
+          backgroundColor: kblack,
+          duration: Duration(seconds: 2),
+        );
+        print('Added to favorites ${adminData.adminUid}');
+      }
+
+      // Toggle the isInFavorites flag
+      isInFavorites = !isInFavorites;
+      emit(LoadedState());
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  bool isInFavorites = false; // Initialize as false initially
 }

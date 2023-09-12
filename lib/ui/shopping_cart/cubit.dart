@@ -18,4 +18,9 @@ class ShoppingCartCubit extends Cubit<ShoppingCartState> {
     var updateState = ShoppingCartState(count: count);
     emit(updateState);
   }
+
+  void removedItem(cartItems, index) {
+    cartItems.removeAt(index);
+    emit(Loaded());
+  }
 }

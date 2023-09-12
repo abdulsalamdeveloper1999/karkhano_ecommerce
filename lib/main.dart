@@ -1,102 +1,90 @@
-import 'dart:async';
+import 'dart:developer';
 
-import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
+import 'package:e_commerce_store_karkhano/ui/admin_login.dart';
+import 'package:e_commerce_store_karkhano/ui/admin_panel/order_status/logic.dart';
 import 'package:e_commerce_store_karkhano/ui/home/cubit.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:e_commerce_store_karkhano/ui/profie/profile_controller.dart';
+import 'package:e_commerce_store_karkhano/ui/shopping_cart/controller.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import 'core/constants.dart';
 import 'firebase_options.dart';
 
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  log('Handling a background message ${message.messageId}');
+}
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  ).then((value) {
+    Get.put(ProfileController()).getUser();
+    Get.put(OrderStatusLogic()).fetchData('pending');
+    Get.put(ShoppingCartController());
+  });
+  await FirebaseMessaging.instance.getInitialMessage();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  log(
+    await flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>()!
+        .requestPermission()
+        .toString(),
   );
-  runApp(const MyApp());
+
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  // _notificationServices.getDeviceToken();
+  runApp(MyApp());
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+// @pragma('vm:entry-point')
+// Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+//   // Handle background messages here
+//   await Firebase.initializeApp();
+//   if (kDebugMode) {
+//     print(message.notification!.title.toString());
+//   }
+// }
 
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  late StreamSubscription<User?> user;
-
-  @override
-  void initState() {
-    super.initState();
-    user = FirebaseAuth.instance.authStateChanges().listen((user) {
-      if (user == null) {
-        print('User is currently signed out!');
-      } else {
-        print('User is signed in!');
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    user.cancel();
-    super.dispose();
-  }
+class MyApp extends StatelessWidget {
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ScreenUtilInit(
-      child: GetMaterialApp(
-        // initialRoute:
-        //     FirebaseAuth.instance.currentUser == null ? Welcome.id : ChatApp.id,
-        theme: ThemeData(
-          useMaterial3: true,
-          fontFamily: 'EncodeSansMedium',
-          primarySwatch: generateMaterialColor(kblack),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => HomeCubit()..fetchData('All'),
         ),
-        debugShowCheckedModeBanner: false,
-        // home: DropDownAndData(),
-        home: BlocProvider(
-          create: (context) => HomeCubit(),
-          child: BottombarPage(),
+        // BlocProvider(
+        //   create: (context) => AdminGetDataCubit()..fetchData(),
+        // )
+      ],
+      child: ScreenUtilInit(
+        child: GetMaterialApp(
+          theme: ThemeData(
+            useMaterial3: true,
+            fontFamily: 'EncodeSansMedium',
+            primarySwatch: generateMaterialColor(kblack),
+          ),
+          debugShowCheckedModeBanner: false,
+          // home: Add_dataPage(),
+          // home: SplashPage(),
+          home: AdminLogin(),
+          // home: MyHomePage(
+          //   title: 'Home',
+          // ),
         ),
-        // home: FirebaseAuth.instance.currentUser == null
-        //     ? SplashPage()
-        //     : Add_dataPage()
-        // MultiBlocProvider(
-        //   providers: [
-        //     BlocProvider(
-        //       create: (context) => SplashCubit()..loadSplashData(),
-        //     ),
-        //     BlocProvider(
-        //       create: (context) => LoginCubit(),
-        //     )
-        //   ],
-        //   child: BlocBuilder<SplashCubit, SplashState>(
-        //     builder: (context, state) {
-        //       if (state is SplashLoaded) {
-        //         // Check authentication status and navigate accordingly
-        //         return BlocBuilder<LoginCubit, LoginState>(
-        //           builder: (context, loginState) {
-        //             if (loginState.status ==
-        //                 AuthenticationStatus.authenticated) {
-        //               return Add_dataPage();
-        //             } else {
-        //               return SplashPage();
-        //             }
-        //           },
-        //         );
-        //       } else {
-        //         return SplashPage(); // Show splash until data is loaded
-        //       }
-        //     },
-        //   ),
-        // ),
       ),
     );
   }

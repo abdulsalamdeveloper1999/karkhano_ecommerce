@@ -1,12 +1,12 @@
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'mytext.dart';
 
 // ignore: must_be_immutable
 class MyButton extends StatelessWidget {
   var bgcolor;
+  double width;
   final text;
   var textColor;
   var bdcolor;
@@ -17,6 +17,7 @@ class MyButton extends StatelessWidget {
   MyButton({
     Key? key,
     this.textSize = 14,
+    this.width = 335,
     required this.text,
     this.loading = false,
     this.bdcolor = kblack,
@@ -30,28 +31,13 @@ class MyButton extends StatelessWidget {
     double w = MediaQuery.of(context).size.width;
     double h = MediaQuery.of(context).size.height;
 
-    return Container(
-      decoration: BoxDecoration(
-        boxShadow: [
-          BoxShadow(
-            offset: const Offset(2, 4),
-            blurRadius: 24,
-            spreadRadius: 0,
-            color: kblack.withOpacity(0.2),
-          ),
-        ],
-      ),
-      width: w,
-      height: h * 0.065,
+    return SizedBox(
+      height: 56,
+      width: width,
       child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          side: BorderSide(width: 1.0, color: bdcolor),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          elevation: 0,
-          backgroundColor: bgcolor,
-        ),
+        style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(bgcolor),
+            side: MaterialStatePropertyAll(BorderSide(color: bdcolor))),
         onPressed: onPress,
         child: Center(
           child: loading
@@ -61,7 +47,7 @@ class MyButton extends StatelessWidget {
               : MyText(
                   align: TextAlign.center,
                   text: '$text',
-                  size: 16.sp,
+                  size: textSize,
                   fontFamily: 'Montserrat',
                   weight: FontWeight.w700,
                   color: textColor,

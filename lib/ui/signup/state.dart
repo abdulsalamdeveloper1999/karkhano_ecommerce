@@ -7,3 +7,7 @@ class SignupState {
     return SignupState();
   }
 }
+
+class SignUpInitial extends SignupState {}
+
+class SignUpLoaded extends SignupState {}

@@ -1,29 +1,18 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/models/admin_model_data.dart';
+import 'package:e_commerce_store_karkhano/core/services/notidication_services_updated.dart';
 import 'package:e_commerce_store_karkhano/ui/admin_panel/add_data/state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ndialog/ndialog.dart';
 
 import '../../../core/services/database.dart';
 import '../../../core/widgets/custom_progress_dialog.dart';
-
-ProgressDialog progressDialog = ProgressDialog(
-  Get.context!,
-  blur: 10,
-  title: Text("Uploading Data"),
-  message: Text("Please Wait"),
-  onDismiss: () {
-    if (kDebugMode) {
-      debugPrint("Do something onDismiss");
-    }
-  },
-);
 
 class AddDataCubit extends Cubit<AddDataState> {
   void showCustomProgressDialog(BuildContext context) {
@@ -34,6 +23,18 @@ class AddDataCubit extends Cubit<AddDataState> {
         return CustomProgressDialogWidget();
       },
     );
+  }
+
+  String adminToken = '';
+  FcmServices fcmServices = FcmServices();
+
+  void getData() {
+    fcmServices.getDeviceToken().then((value) {
+      adminToken = value;
+      print('This is admin Token   ' + adminToken);
+    });
+    fcmServices.requestPermission();
+    fcmServices.initInfo();
   }
 
   void hideCustomProgressDialog(BuildContext context) {
@@ -117,10 +118,25 @@ class AddDataCubit extends Cubit<AddDataState> {
 
       // Add the data to Firestore
       await DataBaseServices().add_data(data.toMap());
+      Get.snackbar(
+        'Done',
+        "Product Added to catalog",
+        colorText: Colors.white,
+        backgroundColor: kblack,
+      );
+      clearAll();
     } catch (e) {
       if (kDebugMode) {
         print(e.toString());
       }
     }
+  }
+
+  clearAll() {
+    titleController.clear();
+    descriptionController.clear();
+    priceController.clear();
+    images.clear();
+    emit(ImageLoad());
   }
 }
