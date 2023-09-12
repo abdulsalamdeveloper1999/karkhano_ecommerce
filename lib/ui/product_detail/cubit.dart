@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../core/models/shopping_cart_model.dart';
 import '../../core/services/database.dart';
+import '../profie/profile_controller.dart';
 import 'state.dart';
 
 class ProductDetailCubit extends Cubit<ProductDetailState> {
@@ -68,6 +69,21 @@ class ProductDetailCubit extends Cubit<ProductDetailState> {
 
   void uploadFavorites(AdminModel adminData) async {
     try {
+      final logic = Get.find<ProfileController>();
+
+      if (!logic.currentUserInfoList.isNotEmpty) {
+        // If the user is not signed in, show an error message
+        Get.snackbar(
+          'Error',
+          'Please sign in to add products to favorites',
+          colorText: kwhite,
+          backgroundColor:
+              Colors.red, // You can use a different color for error messages
+          duration: Duration(seconds: 2),
+        );
+        return; // Exit the function without performing any actions
+      }
+
       if (isInFavorites) {
         // If the product is already in favorites, remove it
         await DataBaseServices().deleteFav(adminData.adminUid!);
@@ -84,13 +100,14 @@ class ProductDetailCubit extends Cubit<ProductDetailState> {
         await DataBaseServices().addfav(adminData.toMap(), adminData.adminUid!);
         Get.snackbar(
           'Done',
-          'Product add to favorites',
+          'Product added to favorites',
           colorText: kwhite,
           backgroundColor: kblack,
           duration: Duration(seconds: 2),
         );
         print('Added to favorites ${adminData.adminUid}');
       }
+
       // Toggle the isInFavorites flag
       isInFavorites = !isInFavorites;
       emit(LoadedState());

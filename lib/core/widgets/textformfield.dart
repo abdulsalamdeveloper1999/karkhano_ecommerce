@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constants.dart';
 
@@ -11,10 +12,11 @@ class MyField extends StatelessWidget {
       suffixIcon,
       hintstyle,
       controller,
-      validator,
-      visibile;
+      visibile,
+      keyboardType;
+
+  String? Function(String?)? validator;
   MyField({
-    Key? key,
     this.suffixIcon,
     this.visibile = false,
     this.controller,
@@ -22,7 +24,8 @@ class MyField extends StatelessWidget {
     this.hintstyle,
     this.prefixIcon,
     this.validator,
-  }) : super(key: key);
+    this.keyboardType,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +35,7 @@ class MyField extends StatelessWidget {
     );
     var kTextFormFieldStyle = TextStyle(
       color: kblack,
+      fontSize: 14.sp,
       fontFamily: 'EncodeSansRegular',
     );
 
@@ -40,6 +44,7 @@ class MyField extends StatelessWidget {
       fontFamily: 'EncodeSansRegular',
     );
     return TextFormField(
+      keyboardType: keyboardType,
       obscureText: visibile,
       style: kTextFormFieldStyle,
       validator: validator,

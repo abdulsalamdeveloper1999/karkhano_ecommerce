@@ -19,7 +19,8 @@ class AdminModel {
 
   // Convert an AdminModel object to a Map
   Map<String, dynamic> toMap() {
-    List imagePaths = adminImages!.map((file) => file.path).toList();
+    List<String> imagePaths =
+        adminImages?.map((file) => file.path)?.toList() ?? [];
     return {
       'adminCategory': adminCategory,
       'adminImages': imagePaths,
@@ -31,16 +32,35 @@ class AdminModel {
   }
 
   static AdminModel fromMap(Map<String, dynamic> map) {
-    AdminModel model = AdminModel();
-    model.adminCategory = map['adminCategory'] ?? '';
-    model.adminTitle = map['adminTitle'] ?? ''; // Use 'adminTitle' key
-    model.adminDescription =
-        map['adminDescription'] ?? ''; // Use 'adminDescription' key
-    model.adminPrice = map['adminPrice'] ?? ''; // Use 'adminPrice' key
-    model.adminUid = map['adminUid'] ?? '';
     List<String> imagePaths = List<String>.from(map['adminImages'] ?? []);
-    model.adminImages = imagePaths.map((path) => File(path)).toList();
+    List<File> adminImages = imagePaths.map((path) => File(path)).toList();
 
-    return model;
+    return AdminModel(
+      adminCategory: map['adminCategory'] ?? '',
+      adminImages: adminImages,
+      adminTitle: map['adminTitle'] ?? '',
+      adminDescription: map['adminDescription'] ?? '',
+      adminPrice: map['adminPrice'] ?? 0,
+      adminUid: map['adminUid'] ?? '',
+    );
+  }
+
+  // Implement the copyWith method
+  AdminModel copyWith({
+    String? adminCategory,
+    List<File>? adminImages,
+    String? adminTitle,
+    String? adminDescription,
+    int? adminPrice,
+    String? adminUid,
+  }) {
+    return AdminModel(
+      adminCategory: adminCategory ?? this.adminCategory,
+      adminImages: adminImages ?? this.adminImages,
+      adminTitle: adminTitle ?? this.adminTitle,
+      adminDescription: adminDescription ?? this.adminDescription,
+      adminPrice: adminPrice ?? this.adminPrice,
+      adminUid: adminUid ?? this.adminUid,
+    );
   }
 }

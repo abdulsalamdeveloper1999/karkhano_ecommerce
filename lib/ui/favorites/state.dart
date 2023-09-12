@@ -13,3 +13,5 @@ class FavoriteLoaded extends FavoritesState {
 class FavoriteError extends FavoritesState {
   FavoriteError({String errorMessage = ''});
 }
+
+class FavoriteEmpty extends FavoritesState {} // Add this class

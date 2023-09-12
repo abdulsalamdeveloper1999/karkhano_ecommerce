@@ -19,10 +19,10 @@ class FavoritesCubit extends Cubit<FavoritesState> {
     }
   }
 
-  Future<void> delFavorites(useruid, index) async {
+  Future<void> delFavorites(collectionUid, index) async {
     emit(FavoriteInitial());
     try {
-      await DataBaseServices().deleteFav(useruid);
+      await DataBaseServices().deleteFav(collectionUid);
       fav.removeAt(index);
       if (kDebugMode) {
         print('deleted');

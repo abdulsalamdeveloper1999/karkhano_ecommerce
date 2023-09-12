@@ -1,47 +1,49 @@
-import 'package:e_commerce_store_karkhano/core/constants.dart';
+import 'package:e_commerce_store_karkhano/core/widgets/elevated_button.dart';
 import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
-import '../../core/widgets/mytext.dart';
 
 class OrderSuccessScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-        title: Text('Order Placed Successfully'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.check_circle,
-              color: Colors.green,
-              size: 100,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Your order has been placed successfully!',
-              style: TextStyle(fontSize: 18),
-            ),
-            SizedBox(height: 16),
-            ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStatePropertyAll(kblack),
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+          title: Text('Order Placed Successfully'),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              Image.asset(
+                'assets/icons_images/bags.png',
+                height: 213.h,
+                width: 208.w,
+                fit: BoxFit.cover,
               ),
-              onPressed: () {
-                Get.off(() => BottombarPage());
-              },
-              child: MyText(
-                text: 'Back to Home',
-                color: kwhite,
+              SizedBox(height: 16),
+              Text(
+                'Your order will be delivered soon.\nThank you for choosing our app!',
+                style: TextStyle(fontSize: 18),
+                textAlign: TextAlign.center,
               ),
-            ),
-          ],
+              Spacer(),
+              SizedBox(
+                height: 55.h,
+                child: MyButton(
+                  text: 'Continue Shopping',
+                  onPress: () {
+                    Get.off(() => BottombarPage());
+                  },
+                ),
+              ),
+              SizedBox(height: 16.h),
+            ],
+          ),
         ),
       ),
     );

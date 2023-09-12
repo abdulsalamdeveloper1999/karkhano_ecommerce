@@ -34,7 +34,7 @@ class _CardCheckOutWidgetState extends State<CardCheckOutWidget> {
           child: CachedNetworkImage(
             height: 70,
             width: 70,
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
             imageUrl: widget.cartItem.adminImages[0],
           ),
         ),

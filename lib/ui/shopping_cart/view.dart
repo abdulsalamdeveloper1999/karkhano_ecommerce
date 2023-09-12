@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
@@ -6,10 +7,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../core/models/shopping_cart_model.dart';
+import '../../core/services/notidication_services_updated.dart';
 import 'cartWidget.dart';
 import 'controller.dart';
 
+FcmServices _fcm = FcmServices();
 ShoppingCartController _controller = Get.put(ShoppingCartController());
+// NotificationServices _notificationServices = NotificationServices();
 
 class ShoppingCartPage extends StatelessWidget {
   int pageValue;
@@ -35,6 +39,7 @@ class ShoppingCartPage extends StatelessWidget {
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: 24.h),
                   Obx(() {
@@ -42,10 +47,10 @@ class ShoppingCartPage extends StatelessWidget {
                     return cartItems.isNotEmpty
                         ? _buildCartList(cartItems)
                         : Center(
-                            child: Text('No Item In Cart'),
+                            child: Text('No Items In Cart'),
                           );
                   }),
-                  Spacer(),
+                  _controller.cartItems.isNotEmpty ? Spacer() : SizedBox(),
                   _controller.cartItems.isNotEmpty
                       ? _buildTotal()
                       : Container(),
@@ -61,46 +66,50 @@ class ShoppingCartPage extends StatelessWidget {
     );
   }
 
-  ListView _buildCartList(List<ShoppingCartItemModel> cartItems) {
-    return ListView.separated(
-      shrinkWrap: true,
-      itemBuilder: (context, index) {
-        final cartItem = cartItems[index];
-        return Dismissible(
-          key: UniqueKey(),
-          background: Container(
-            color: Colors.red,
-            child: Icon(
-              Icons.delete,
-              color: kwhite,
-            ),
-          ),
-          secondaryBackground: Container(
-            alignment: Alignment.centerLeft,
-            color: Colors.red,
-            child: Icon(
-              Icons.delete,
-              color: kwhite,
-            ),
-          ),
-          onDismissed: (direction) {
-            _controller.removedItem(index);
+  _buildCartList(List<ShoppingCartItemModel> cartItems) {
+    return GetBuilder<ShoppingCartController>(
+      builder: (logic) {
+        return ListView.separated(
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+            final cartItem = cartItems[index];
+            return Dismissible(
+              key: UniqueKey(),
+              background: Container(
+                color: Colors.red,
+                child: Icon(
+                  Icons.delete,
+                  color: kwhite,
+                ),
+              ),
+              secondaryBackground: Container(
+                alignment: Alignment.centerLeft,
+                color: Colors.red,
+                child: Icon(
+                  Icons.delete,
+                  color: kwhite,
+                ),
+              ),
+              onDismissed: (direction) {
+                _controller.removedItem(index);
+              },
+              child: CardCheckOutWidget(
+                cartItem: cartItem,
+                index: cartItems.indexOf(cartItem), // Pass the index here
+              ),
+            );
           },
-          child: CardCheckOutWidget(
-            cartItem: cartItem,
-            index: cartItems.indexOf(cartItem), // Pass the index here
-          ),
+          separatorBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 24),
+              child: Divider(
+                color: Color(0xffEDEDED),
+              ),
+            );
+          },
+          itemCount: cartItems.length,
         );
       },
-      separatorBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.symmetric(vertical: 24),
-          child: Divider(
-            color: Color(0xffEDEDED),
-          ),
-        );
-      },
-      itemCount: cartItems.length,
     );
   }
 
@@ -152,8 +161,24 @@ class ShoppingCartPage extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         final cartItems = _controller.cartItems;
+        DocumentSnapshot adminToken = await FirebaseFirestore.instance
+            .collection('adminToken')
+            .doc('1999')
+            .get();
         if (cartItems.isNotEmpty) {
-          _controller.uploadHistory(cartItems.first, context);
+          print(adminToken['token']);
+          try {
+            _controller.uploadHistory(cartItems.first, context);
+            _fcm.sendNotification(
+              title: 'New Order Alert', // Updated title
+              body: 'A new order has been placed.', // Updated body
+              to: adminToken['token'],
+              icon:
+                  'https://firebasestorage.googleapis.com/v0/b/karkhanodropshipping.appspot.com/o/ic_launcher.png?alt=media&token=8ea1bc22-790a-49ca-8fdf-1054daf008a7',
+            );
+          } catch (e) {
+            e.toString();
+          }
         }
       },
       child: Container(

@@ -6,6 +6,7 @@ import 'state.dart';
 
 class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
+
   String selectedCategory = "All";
   void fetchData(String selectedCategory) async {
     emit(HomeLoaded());
@@ -29,8 +30,9 @@ class HomeCubit extends Cubit<HomeState> {
   TextEditingController searchController = TextEditingController();
 
   @override
-  void dispose() {
+  Future<void> close() {
     searchController.dispose();
+    return super.close();
   }
 
   int selectedContainer = 0;
@@ -47,11 +49,23 @@ class HomeCubit extends Cubit<HomeState> {
     }
   }
 
-  // void filterProductsByName(String name) async {
-  //   final dataToFilter = (state as HomeGetLoaded).data;
-  //   final filteredData = dataToFilter.where((product) =>
-  //       product.adminTitle!.toLowerCase().contains(name.toLowerCase()));
-  //
-  //   emit(HomeFiltered(filteredData: filteredData.toList()));
-  // }
+  List<Map<String, dynamic>> filteredData = []; // Add this property
+
+  void filterData(String text) async {
+    emit(HomeLoaded()); // Emit a loading state
+    try {
+      // Filter the data from the database service
+      final data = await _databaseService.getData(selectedCategory);
+      final filteredData = data.where((product) {
+        final title = product.adminTitle?.toLowerCase() ??
+            ''; // Replace 'title' with the correct field name
+        final search = text.toLowerCase();
+        return title.contains(search);
+      }).toList();
+
+      emit(HomeGetLoaded(data: filteredData)); // Emit the filtered data
+    } catch (e) {
+      emit(HomeDataError('Error filtering data: $e'));
+    }
+  }
 }

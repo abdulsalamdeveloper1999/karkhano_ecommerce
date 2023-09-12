@@ -2,8 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/models/admin_model_data.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
+import 'package:e_commerce_store_karkhano/ui/login/view.dart';
 import 'package:e_commerce_store_karkhano/ui/product_detail/state.dart';
 import 'package:e_commerce_store_karkhano/ui/shopping_cart/view.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -18,9 +20,9 @@ import 'cubit.dart';
 ShoppingCartController _controller = Get.put(ShoppingCartController());
 
 class ProductDetailPage extends StatelessWidget {
-  final AdminModel adminData; // Change the type to match your data type
+  AdminModel? adminData; // Change the type to match your data type
 
-  ProductDetailPage({required this.adminData});
+  ProductDetailPage({this.adminData});
 
   @override
   Widget build(BuildContext context) {
@@ -33,49 +35,40 @@ class ProductDetailPage extends StatelessWidget {
   Widget _buildPage(BuildContext context) {
     final cubit = BlocProvider.of<ProductDetailCubit>(context);
 
-    cubit.currentPrice = adminData.adminPrice!;
+    cubit.currentPrice = adminData!.adminPrice!;
 
-    cubit.increasePrice = adminData.adminPrice!;
+    cubit.increasePrice = adminData!.adminPrice!;
 
     List<String> imageUrls =
-        adminData.adminImages!.map((file) => file.path).toList();
+        adminData!.adminImages!.map((file) => file.path).toList();
 
     return SafeArea(
       child: Scaffold(
         bottomSheet: GestureDetector(
           onTap: () {
-            final selectedProduct = ShoppingCartItemModel(
-              productName: adminData.adminTitle!,
-              productPrice: adminData.adminPrice!,
-              quantity: cubit.state.count,
-              adminImages: imageUrls,
-              uid: adminData.adminUid!,
-            );
-            _controller.addToShoppingCart(selectedProduct);
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => ShoppingCartPage(pageValue: 1),
-              ),
-            );
-
-            // print('@@@@@@@@@@@@@@@@@@@@@@@@@@ ${adminData.adminUid}');
-
-            // if (cubit.state.count != 0) {
-            //
-            //   cubit.currentPrice = 0;
-            //   cubit.state.count = 0;
-            // } else {
-            //   Get.rawSnackbar(
-            //     borderRadius: 20,
-            //     margin: EdgeInsets.fromLTRB(50, 50, 50, 200),
-            //     title: 'Alert',
-            //     message: 'Quantity should be atleast 1',
-            //     duration: Duration(seconds: 1),
-            //   );
-            // }
+            if (FirebaseAuth.instance.currentUser != null) {
+              final selectedProduct = ShoppingCartItemModel(
+                productName: adminData!.adminTitle!,
+                productPrice: adminData!.adminPrice!,
+                quantity: cubit.state.count,
+                adminImages: imageUrls,
+                uid: adminData!.adminUid!,
+              );
+              _controller.addToShoppingCart(selectedProduct);
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => ShoppingCartPage(
+                    pageValue: 1,
+                  ),
+                ),
+              );
+            } else {
+              Get.to(() => LoginPage());
+            }
           },
           child: Container(
             height: 60.h,
+            width: double.infinity,
             margin: EdgeInsets.only(
               left: 24,
               right: 24,
@@ -92,16 +85,11 @@ class ProductDetailPage extends StatelessWidget {
                   Icons.shopping_cart_outlined,
                   color: kwhite,
                 ),
-                BlocConsumer<ProductDetailCubit, ProductDetailState>(
-                  listener: (context, state) {},
-                  builder: (context, state) {
-                    return MyText(
-                      text: 'Add to Cart | Rs. ${cubit.currentPrice}',
-                      color: kwhite,
-                      size: 14.sp,
-                      fontFamily: 'EncodeSansBold',
-                    );
-                  },
+                MyText(
+                  text: 'Add to Cart | Rs. ${cubit.currentPrice}',
+                  color: kwhite,
+                  size: 14.sp,
+                  fontFamily: 'EncodeSansBold',
                 )
               ],
             ),
@@ -124,7 +112,7 @@ class ProductDetailPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: MyText(
-                        text: adminData.adminTitle!,
+                        text: adminData!.adminTitle!.capitalizeFirst!,
                         fontFamily: 'EncodeSansSemiBold',
                         size: 24.sp,
                       ),
@@ -135,7 +123,7 @@ class ProductDetailPage extends StatelessWidget {
                 SizedBox(height: 8.h),
                 SizedBox(height: 10.h),
                 ReadMoreText(
-                  '${adminData.adminDescription}',
+                  '${adminData!.adminDescription}',
                   trimLines: 3,
                   style: TextStyle(
                     fontFamily: 'EncodeSansRegular',
@@ -172,7 +160,7 @@ class ProductDetailPage extends StatelessWidget {
 class PageViewWidget extends StatelessWidget {
   int length;
   var imageUri;
-  AdminModel adminData;
+  AdminModel? adminData;
   final PageController _pageController = PageController();
 
   PageViewWidget(
@@ -203,7 +191,7 @@ class PageViewWidget extends StatelessWidget {
                 child: CachedNetworkImage(
                   // Use CachedNetworkImage here
                   imageUrl: imageUri[index],
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       Center(child: CircularProgressIndicator()),
                   errorWidget: (context, url, error) => Icon(Icons.error),
@@ -257,7 +245,7 @@ class PageViewWidget extends StatelessWidget {
                   onTap: () {
                     context
                         .read<ProductDetailCubit>()
-                        .uploadFavorites(adminData);
+                        .uploadFavorites(adminData!);
                   },
                   child: CircleAvatar(
                     backgroundColor: kwhite,

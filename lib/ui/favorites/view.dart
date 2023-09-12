@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:e_commerce_store_karkhano/ui/favorites/state.dart';
+import 'package:e_commerce_store_karkhano/ui/product_detail/view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,6 +25,7 @@ class FavoritesPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        automaticallyImplyLeading: false,
         title: MyText(
           text: 'Favorites',
           size: 18.sp,
@@ -34,6 +37,11 @@ class FavoritesPage extends StatelessWidget {
           if (state is FavoriteInitial) {
             return Center(child: CircularProgressIndicator());
           } else if (state is FavoriteLoaded) {
+            if (cubit.fav.isEmpty) {
+              return Center(
+                child: Text('No Favorites Items'),
+              );
+            }
             return Container(
               margin: EdgeInsets.only(top: 15),
               child: Center(
@@ -49,65 +57,86 @@ class FavoritesPage extends StatelessWidget {
                             listener: (context, state) {},
                             builder: (context, state) {
                               return Dismissible(
+                                background: Container(
+                                  color: Colors.red,
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.delete,
+                                      color: kwhite,
+                                    ),
+                                  ),
+                                ),
                                 key: UniqueKey(),
                                 onDismissed: (_) async {
-                                  cubit.delFavorites(items.adminUid, index);
-                                  print(items.adminUid);
+                                  if (cubit.fav.isNotEmpty) {
+                                    cubit.delFavorites(items.adminUid, index);
+                                    print(items.adminUid);
+                                  }
                                 },
-                                child: Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 15, vertical: 10),
-                                  decoration: BoxDecoration(
-                                      // color: kblack.withOpacity(0.2),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    Get.to(
+                                      () => ProductDetailPage(
+                                        adminData: cubit.fav[index],
                                       ),
-                                  child: Row(
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(14),
-                                        child: CachedNetworkImage(
-                                          height: 70,
-                                          width: 70,
-                                          fit: BoxFit.fill,
-                                          imageUrl: imageUrls.first,
-                                        ),
-                                      ),
-                                      SizedBox(width: Get.width * 0.04),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          MyText(
-                                            text: items.adminTitle!,
-                                            size: 14.sp,
-                                            fontFamily: 'EncodeSansSemiBold',
-                                          ),
-                                          MyText(
-                                            text: 'Dress modern',
-                                            size: 10.sp,
-                                            color: Color(0xffA4AAAD),
-                                            fontFamily: 'EncodeSansRegular',
-                                          ),
-                                          Container(
-                                            width: Get.width / 1.6,
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                    );
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 10),
+                                    decoration: BoxDecoration(),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(14),
+                                              child: CachedNetworkImage(
+                                                height: 70,
+                                                width: 70,
+                                                fit: BoxFit.cover,
+                                                imageUrl: imageUrls.first,
+                                              ),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
                                               children: [
-                                                Expanded(
-                                                  child: MyText(
-                                                    text: '${items.adminPrice}',
-                                                    size: 14.sp,
-                                                    fontFamily:
-                                                        'EncodeSansSemiBold',
-                                                  ),
+                                                MyText(
+                                                  text: items.adminTitle!
+                                                      .capitalizeFirst!,
+                                                  size: 14.sp,
+                                                  fontFamily:
+                                                      'EncodeSansSemiBold',
+                                                ),
+                                                MyText(
+                                                  text: '${items.adminPrice}',
+                                                  size: 14.sp,
+                                                  fontFamily:
+                                                      'EncodeSansSemiBold',
                                                 ),
                                               ],
                                             ),
+                                          ],
+                                        ),
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            Get.to(
+                                              () => ProductDetailPage(
+                                                adminData: cubit.fav[index],
+                                              ),
+                                            );
+                                          },
+                                          child: MyText(
+                                            text: 'Buy',
                                           ),
-                                        ],
-                                      )
-                                    ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
