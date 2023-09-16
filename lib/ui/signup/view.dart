@@ -25,7 +25,7 @@ class SignupPage extends StatelessWidget {
       builder: (context, state) {
         return SafeArea(
           child: Scaffold(
-            backgroundColor: Color(0xffDCDBDC),
+            // backgroundColor: Color(0xffDCDBDC),
             body: BlocConsumer<SignupCubit, SignupState>(
               listener: (context, state) {},
               builder: (context, state) {
@@ -42,13 +42,13 @@ class SignupPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // Icon(Icons.arrow_back_ios),
-                          SizedBox(height: 40.sp),
+                          SizedBox(height: Get.height * 0.015),
                           MyText(
                             text: 'Sign Up',
                             size: 32.sp,
                             fontFamily: 'EncodeSansBold',
                           ),
-                          SizedBox(height: Get.height * 0.1),
+                          SizedBox(height: Get.height * 0.055),
                           MyField(
                             // validator: (value) {
                             //   if (value!.isEmpty) {
@@ -72,7 +72,12 @@ class SignupPage extends StatelessWidget {
                           ),
                           SizedBox(height: 16.sp),
                           MyField(
-                            visibile: true,
+                            visibile: cubit.isVisible,
+                            suffixIcon: InkWell(
+                                onTap: () {
+                                  cubit.updateVisibilty();
+                                },
+                                child: Icon(Icons.visibility_off)),
                             // validator: (value) {
                             //   if (value!.isEmpty) {
                             //     return 'Required';
@@ -106,11 +111,9 @@ class SignupPage extends StatelessWidget {
                             hintText: 'Address',
                           ),
 
-                          SizedBox(height: 16.h),
+                          SizedBox(height: Get.height * 0.045),
                           BlocConsumer<SignupCubit, SignupState>(
-                            listener: (context, state) {
-                              // TODO: implement listener
-                            },
+                            listener: (context, state) {},
                             builder: (context, state) {
                               return MyButton(
                                 text: 'SIGN UP',

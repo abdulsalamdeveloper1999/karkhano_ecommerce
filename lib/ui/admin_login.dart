@@ -1,5 +1,4 @@
 import 'package:e_commerce_store_karkhano/core/constants.dart';
-import 'package:e_commerce_store_karkhano/core/widgets/custom_progress_dialog.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:e_commerce_store_karkhano/ui/admin_panel/add_data/view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -113,9 +112,11 @@ class AdminLogin extends StatelessWidget {
 }
 
 class AdminLoginController extends GetxController {
-  TextEditingController emailController = TextEditingController();
+  TextEditingController emailController =
+      TextEditingController(text: 'admin@gmail.com');
 
-  TextEditingController passwordController = TextEditingController();
+  TextEditingController passwordController =
+      TextEditingController(text: '123456');
 
   GlobalKey<FormState> gKey = GlobalKey<FormState>();
 
@@ -131,7 +132,37 @@ class AdminLoginController extends GetxController {
     showDialog(
       context: Get.context!,
       builder: (BuildContext context) {
-        return CustomProgressDialogWidget();
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.all(16),
+              child: ListTile(
+                leading: CircularProgressIndicator(
+                  color: kblack,
+                ),
+                title: Text(
+                  'Loggin In',
+                  style: TextStyle(
+                    fontFamily: '',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  'Please Wait',
+                  style: TextStyle(
+                    fontFamily: '',
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              )),
+        );
       },
     );
     update();

@@ -1,3 +1,4 @@
+import 'package:e_commerce_store_karkhano/ui/login/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +14,7 @@ import 'cubit.dart';
 
 class LoginPage extends StatelessWidget {
   var klogin = Color(0xff414141);
+
   // LoginPage({required this.value});
   // int value;
   @override
@@ -40,14 +42,13 @@ class LoginPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 20, left: 20),
                 child: Image.asset(
                   'assets/icons_images/back.png',
-                  height: 25,
-                  width: 25,
+                  height: 25.w,
+                  width: 25.w,
                   fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
-          backgroundColor: Color(0xffDCDBDC),
           body: Column(
             children: [
               TabBar(
@@ -126,10 +127,21 @@ class LoginCard extends StatelessWidget {
                 hintText: 'Email',
               ),
               SizedBox(height: 16.sp),
-              MyField(
-                controller: cubit.passwordController,
-                visibile: true,
-                hintText: 'Password',
+              BlocConsumer<LoginCubit, LoginState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return MyField(
+                    controller: cubit.passwordController,
+                    visibile: cubit.isVisible,
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        cubit.updateVisibilty();
+                      },
+                      child: Icon(Icons.visibility_off),
+                    ),
+                    hintText: 'Password',
+                  );
+                },
               ),
               SizedBox(height: Get.height * 0.09),
               MyButton(

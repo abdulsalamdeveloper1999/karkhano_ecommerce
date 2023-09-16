@@ -195,7 +195,7 @@ class ShoppingCartController extends GetxController {
     } catch (e) {
       hideCustomProgressDialog(context);
       if (kDebugMode) {
-        print(e.toString());
+        debugPrint(e.toString());
       }
     }
   }

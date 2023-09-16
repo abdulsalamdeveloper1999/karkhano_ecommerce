@@ -8,30 +8,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
-import '../../core/services/notidication_services_updated.dart';
 import '../../core/widgets/mytext.dart';
 import '../profie/view.dart';
 import '../shopping_cart/controller.dart';
 import 'cubit.dart';
 
-FcmServices _fcmServices = FcmServices();
+// FcmServices _fcmServices = FcmServices();
 
-class BottombarPage extends StatefulWidget {
+class BottombarPage extends StatelessWidget {
   BottombarPage({currentIndex});
-
-  @override
-  State<BottombarPage> createState() => _BottombarPageState();
-}
-
-class _BottombarPageState extends State<BottombarPage> {
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _fcmServices.requestPermission();
-    _fcmServices.initInfo();
-    _fcmServices.getDeviceToken();
-  }
 
   var currentIndex;
 

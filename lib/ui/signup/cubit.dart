@@ -22,6 +22,13 @@ class SignupCubit extends Cubit<SignupState> {
   TextEditingController addressController = TextEditingController();
   TextEditingController numberController = TextEditingController();
 
+  bool isVisible = true;
+
+  void updateVisibilty() {
+    isVisible = !isVisible;
+    emit(SignUpLoaded());
+  }
+
   @override
   Future<void> close() {
     addressController.dispose();
@@ -101,10 +108,25 @@ class SignupCubit extends Cubit<SignupState> {
         hideCustomProgressDialog(context);
         Get.snackbar(
           'Registration error',
-          'All fields are required',
+          '',
+          messageText: Text(
+            'All fields are required',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+          ),
+          titleText: Text(
+            'Oops!',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
+            ),
+          ),
           duration: Duration(seconds: 2),
-          backgroundColor: kblack,
-          colorText: kwhite,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
         );
         return;
       }

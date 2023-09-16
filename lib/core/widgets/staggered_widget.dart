@@ -22,7 +22,7 @@ class StaggeredDualView extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final width = constraints.maxWidth;
 
-        final itemHight = (width * 0.5) / aspectRatio;
+        final itemHight = (width * 0.3) / aspectRatio;
         // final height = constraints.maxHeight + itemHight;
         return GridView.builder(
           padding: EdgeInsets.only(top: itemHight / 80, bottom: itemHight),

@@ -2,16 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:e_commerce_store_karkhano/ui/bottombar/view.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../core/models/shopping_cart_model.dart';
-import '../../core/services/notidication_services_updated.dart';
+import '../../core/services/notification_services.dart';
 import 'cartWidget.dart';
 import 'controller.dart';
 
-FcmServices _fcm = FcmServices();
+// FcmServices _fcm = FcmServices();
 ShoppingCartController _controller = Get.put(ShoppingCartController());
 // NotificationServices _notificationServices = NotificationServices();
 
@@ -20,6 +21,8 @@ class ShoppingCartPage extends StatelessWidget {
 
   ShoppingCartPage({this.pageValue = 0});
 
+  final _messagingService = MessagingService();
+  // Instance of MessagingService for handling notifications
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -166,18 +169,17 @@ class ShoppingCartPage extends StatelessWidget {
             .doc('1999')
             .get();
         if (cartItems.isNotEmpty) {
-          print(adminToken['token']);
           try {
+            if (kDebugMode) {
+              debugPrint(cartItems.length.toString());
+              debugPrint(adminToken['token']);
+            }
             _controller.uploadHistory(cartItems.first, context);
-            _fcm.sendNotification(
-              title: 'New Order Alert', // Updated title
-              body: 'A new order has been placed.', // Updated body
-              to: adminToken['token'],
-              icon:
-                  'https://firebasestorage.googleapis.com/v0/b/karkhanodropshipping.appspot.com/o/ic_launcher.png?alt=media&token=8ea1bc22-790a-49ca-8fdf-1054daf008a7',
-            );
+            _messagingService.sendNotification(adminToken);
           } catch (e) {
-            e.toString();
+            if (kDebugMode) {
+              debugPrint('some error occurred');
+            }
           }
         }
       },

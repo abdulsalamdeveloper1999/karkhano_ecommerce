@@ -35,7 +35,7 @@ class AdminGetDataPage extends GetView<AdminGetDataController> {
                       return Container(
                         padding: EdgeInsets.all(15),
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(30),
+                          borderRadius: BorderRadius.circular(15),
                           color: kwhite,
                           boxShadow: [
                             BoxShadow(
@@ -184,6 +184,9 @@ class AdminGetDataPage extends GetView<AdminGetDataController> {
                                     logic.priceController.text = logic
                                         .adminData[index].adminPrice!
                                         .toString();
+                                    logic.categoryController.text =
+                                        logic.adminData[index].adminCategory!;
+
                                     return AlertDialog(
                                       title: Text('Edit Admin Item'),
                                       content: Column(
@@ -211,6 +214,29 @@ class AdminGetDataPage extends GetView<AdminGetDataController> {
                                             ),
                                             keyboardType: TextInputType.number,
                                           ),
+                                          DropdownButtonFormField<String>(
+                                            value:
+                                                logic.categoryController.text,
+                                            items: <String>[
+                                              'Electronics',
+                                              'Cookery',
+                                              'Fashion',
+                                              // Add more categories here
+                                            ].map<DropdownMenuItem<String>>(
+                                                (String value) {
+                                              return DropdownMenuItem<String>(
+                                                value: value,
+                                                child: Text(value),
+                                              );
+                                            }).toList(),
+                                            onChanged: (String? newValue) {
+                                              logic.categoryController.text =
+                                                  newValue!;
+                                            },
+                                            decoration: InputDecoration(
+                                              labelText: 'Category',
+                                            ),
+                                          ),
                                         ],
                                       ),
                                       actions: [
@@ -231,6 +257,8 @@ class AdminGetDataPage extends GetView<AdminGetDataController> {
                                                     .descriptionController.text,
                                                 'adminPrice': int.parse(
                                                     logic.priceController.text),
+                                                'adminCategory': logic
+                                                    .categoryController.text,
                                               },
                                             );
                                             Navigator.of(context)

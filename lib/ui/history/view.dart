@@ -7,7 +7,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../core/constants.dart';
 import '../../core/models/history_model.dart';
+import '../admin_panel/order_status/logic.dart';
 import 'cubit.dart';
 
 class HistoryPage extends StatelessWidget {
@@ -30,12 +32,13 @@ class HistoryPage extends StatelessWidget {
           appBar: AppBar(
             leading: MyBackButtonWidget(),
             centerTitle: true,
-            title: MyText(
-              text: 'Ordered History',
-              size: 16.sp,
-              weight: FontWeight.w700,
-            ),
+            title: Text('Ordered History'),
             bottom: TabBar(
+              splashFactory: NoSplash.splashFactory,
+              labelColor: kblack,
+              labelStyle: TextStyle(fontSize: 16.sp),
+              unselectedLabelColor: kblack.withOpacity(0.5),
+              indicatorColor: kblack,
               tabs: [
                 Tab(text: 'Pending'), // Tab for pending orders
                 Tab(text: 'Processing'), // Tab for processing orders
@@ -98,7 +101,6 @@ class HistoryPage extends StatelessWidget {
 
   Widget buildHistoryItem(HistoryModel items) {
     return Builder(builder: (context) {
-      final cubit = BlocProvider.of<HistoryCubit>(context);
       return Container(
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.only(top: 10),
@@ -107,65 +109,104 @@ class HistoryPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: const EdgeInsets.only(left: 10),
+              padding: const EdgeInsets.all(8),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  MyText(
-                    text: 'Order 16740',
-                    size: 14.sp,
-                  ),
-                  MyText(text: 'Placed on ' + cubit.formatTime(items.date)),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: CachedNetworkImage(
-                          height: 80,
-                          width: 80,
-                          fit: BoxFit.cover,
-                          imageUrl: items.images![0],
-                        ),
+                      MyText(
+                        text: 'Order#',
+                        size: 12.sp,
+                        color: kblack.withOpacity(0.7),
                       ),
-                      SizedBox(width: 10.w),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          MyText(text: items.title!.join('').capitalizeFirst!),
-                          SizedBox(height: 2.h),
-                          MyText(
-                            text: 'Rs. ' +
-                                cubit.oneItemPrice(
-                                    items.price!, items.quantity!),
-                            weight: FontWeight.w700,
-                          ),
-                          SizedBox(height: 2.h),
-                          MyText(text: 'x ' + items.quantity!.join(''))
-                        ],
+                      MyText(
+                        text: items.collectionUid!.toUpperCase(),
                       ),
                     ],
                   ),
-                  MyText(
-                    text: items.status!,
-                    color: items.status == 'pending'
-                        ? Colors.red
-                        : items.status == 'processing'
-                            ? Colors.blue
-                            : Colors.green,
-                    size: 14.sp,
-                    fontStyle: FontStyle.italic,
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      MyText(
+                        text: 'Placed On ',
+                        size: 12.sp,
+                        color: kblack.withOpacity(0.7),
+                      ),
+                      MyText(
+                        text:
+                            Get.find<OrderStatusLogic>().formatTime(items.date),
+                      ),
+                    ],
                   ),
                 ],
               ),
+            ),
+            ...List.generate(
+              items.title!.length,
+              (index) {
+                final quantity = items.quantity![index];
+                final totalPrice = items.price![index];
+                final singleItemPrice = totalPrice / quantity;
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(15),
+                            child: CachedNetworkImage(
+                              placeholder: (context, url) => Center(
+                                child:
+                                    CircularProgressIndicator(), // Add CircularProgressIndicator as a placeholder
+                              ),
+                              height: Get.width / 4,
+                              width: Get.width / 4,
+                              fit: BoxFit.cover,
+                              imageUrl: items.images![index],
+                            ),
+                          ),
+                          SizedBox(width: 10.w),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: Get.width / 2.5,
+                                child: MyText(
+                                  text: items.title![index],
+                                ),
+                              ),
+                              SizedBox(height: 2.h),
+                              MyText(
+                                text: 'Rs. ${singleItemPrice}',
+                                weight: FontWeight.w700,
+                              ),
+                              SizedBox(height: 2.h),
+                              MyText(
+                                text: 'x ' + items.quantity![index].toString(),
+                              )
+                            ],
+                          ),
+                        ],
+                      ),
+                      MyText(
+                        text: items.status!,
+                        color: items.status == 'pending'
+                            ? Colors.red
+                            : items.status == 'processing'
+                                ? Colors.blue
+                                : Colors.green,
+                        size: 14.sp,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
             Padding(
               padding: EdgeInsets.only(right: 15),
