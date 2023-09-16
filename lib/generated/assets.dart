@@ -6,6 +6,7 @@ class Assets {
   static const String fontsEncodeSansCondensedMedium = 'assets/fonts/EncodeSans_Condensed-Medium.ttf';
   static const String fontsEncodeSansCondensedRegular = 'assets/fonts/EncodeSans_Condensed-Regular.ttf';
   static const String fontsEncodeSansCondensedSemiBold = 'assets/fonts/EncodeSans_Condensed-SemiBold.ttf';
+  static const String iconsImagesAppLogo = 'assets/icons_images/app_logo.png';
   static const String iconsImagesAvatar = 'assets/icons_images/avatar.png';
   static const String iconsImagesBack = 'assets/icons_images/back.png';
   static const String iconsImagesBags = 'assets/icons_images/bags.png';

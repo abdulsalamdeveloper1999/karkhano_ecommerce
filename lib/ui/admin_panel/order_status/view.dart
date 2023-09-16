@@ -1,8 +1,8 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/back_button.dart';
 import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:e_commerce_store_karkhano/ui/admin_panel/order_status/logic.dart';
+import 'package:e_commerce_store_karkhano/ui/admin_panel/order_status/reuseable_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -15,7 +15,7 @@ class OrderStatusPage extends StatelessWidget {
     return DefaultTabController(
       length: Get.find<OrderStatusLogic>().status.length,
       child: Scaffold(
-        backgroundColor: kwhite.withOpacity(0.97),
+        backgroundColor: Colors.white.withOpacity(0.97),
         appBar: AppBar(
           leading: MyBackButtonWidget(),
           centerTitle: true,
@@ -31,10 +31,12 @@ class OrderStatusPage extends StatelessWidget {
                 Get.find<OrderStatusLogic>().status.length,
                 (index) => Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: Text(Get.find<OrderStatusLogic>()
-                      .status[index]
-                      .toString()
-                      .capitalizeFirst!),
+                  child: Text(
+                    Get.find<OrderStatusLogic>()
+                        .status[index]
+                        .toString()
+                        .capitalizeFirst!,
+                  ),
                 ),
               )
             ],
@@ -53,7 +55,7 @@ class OrderStatusPage extends StatelessWidget {
 }
 
 class PendingView extends StatelessWidget {
-  const PendingView({super.key});
+  const PendingView({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -64,130 +66,11 @@ class PendingView extends StatelessWidget {
       },
       builder: (logic) {
         return ListView.builder(
-          shrinkWrap: true,
           itemCount: logic.pendingHistory.length,
           itemBuilder: (context, index) {
             final data = logic.pendingHistory[index];
-            return Container(
-              margin: EdgeInsets.only(top: 10),
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // MyText(
-                            //   text: 'Order',
-                            //   size: 14.sp,
-                            // ),
-                            MyText(
-                              text: 'Placed On ' + logic.formatTime(data.date),
-                              size: 12.sp,
-                              color: kblack.withOpacity(0.7),
-                            ),
-                          ],
-                        ),
-                        MyText(text: 'COD'),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 8, top: 5),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: CachedNetworkImage(
-                                imageUrl: data.images![0],
-                                height: 80,
-                                width: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MyText(
-                                    text:
-                                        data.title!.join('').capitalizeFirst!),
-                                MyText(text: 'Rs.' + data.price!.join('')),
-                                MyText(text: 'x ' + data.quantity!.join('')),
-                              ],
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            MyText(
-                              text: data.status!.capitalizeFirst!,
-                              color: Colors.red,
-                            ),
-                            SizedBox(height: 5),
-                            GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return OrderConfirmWidget(data: data);
-                                  },
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: kblack,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: MyText(
-                                  text: 'Update',
-                                  fontStyle: FontStyle.italic,
-                                  color: kwhite,
-                                  size: 12.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 8, top: 16, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        MyText(
-                          text: '${data.quantity!.join('')}  item, Total  ',
-                          size: 14.sp,
-                          color: kblack.withOpacity(0.8),
-                        ),
-                        MyText(
-                          text: logic.oneItemPrice(data.price!, data.quantity!),
-                          size: 16.sp,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
+
+            return ReusableCard(data: data);
           },
         );
       },
@@ -207,132 +90,11 @@ class ProcessingView extends StatelessWidget {
       },
       builder: (logic) {
         return ListView.builder(
-          shrinkWrap: true,
           itemCount: logic.processingHistory.length,
           itemBuilder: (context, index) {
             final data = logic.processingHistory[index];
-            return Container(
-              margin: EdgeInsets.only(top: 10),
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // MyText(
-                            //   text: 'Order',
-                            //   size: 14.sp,
-                            // ),
-                            MyText(
-                              text: logic.formatTime(data.date),
-                              size: 12.sp,
-                              color: kblack.withOpacity(0.7),
-                            ),
-                          ],
-                        ),
-                        MyText(text: 'COD'),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 8, top: 5),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: CachedNetworkImage(
-                                imageUrl: data.images![0],
-                                height: 80,
-                                width: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MyText(
-                                    text:
-                                        data.title!.join('').capitalizeFirst!),
-                                MyText(text: 'Rs.' + data.price!.join('')),
-                                MyText(text: 'x ' + data.quantity!.join('')),
-                              ],
-                            )
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            MyText(
-                              text: data.status!.capitalizeFirst!,
-                              color: Colors.red,
-                            ),
-                            SizedBox(height: 5),
-                            GestureDetector(
-                              onTap: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return OrderDeliveredWidget(
-                                      data: data,
-                                    );
-                                  },
-                                );
-                              },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 5),
-                                decoration: BoxDecoration(
-                                  color: kblack,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: MyText(
-                                  text: 'Update',
-                                  fontStyle: FontStyle.italic,
-                                  color: kwhite,
-                                  size: 12.sp,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 8, top: 16, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        MyText(
-                          text: '${data.quantity!.join('')}  item, Total  ',
-                          size: 14.sp,
-                          color: kblack.withOpacity(0.8),
-                        ),
-                        MyText(
-                          text: logic.oneItemPrice(data.price!, data.quantity!),
-                          size: 16.sp,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
+
+            return ReusableCard(data: data);
           },
         );
       },
@@ -352,101 +114,11 @@ class DeliveredView extends StatelessWidget {
       },
       builder: (logic) {
         return ListView.builder(
-          shrinkWrap: true,
           itemCount: logic.deliveredHistory.length,
           itemBuilder: (context, index) {
             final data = logic.deliveredHistory[index];
-            return Container(
-              margin: EdgeInsets.only(top: 10),
-              color: Colors.white,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // MyText(
-                            //   text: 'Order',
-                            //   size: 14.sp,
-                            // ),
-                            MyText(
-                              text: logic.formatTime(data.date),
-                              size: 12.sp,
-                              color: kblack.withOpacity(0.7),
-                            ),
-                          ],
-                        ),
-                        MyText(text: 'COD'),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16, right: 8, top: 5),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: CachedNetworkImage(
-                                imageUrl: data.images![0],
-                                height: 80,
-                                width: 80,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                MyText(
-                                    text:
-                                        data.title!.join('').capitalizeFirst!),
-                                MyText(text: 'Rs.' + data.price!.join('')),
-                                MyText(text: 'x ' + data.quantity!.join('')),
-                              ],
-                            )
-                          ],
-                        ),
-                        MyText(
-                          text: data.status!.capitalizeFirst!,
-                          color: Colors.red,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(right: 8, top: 16, bottom: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        MyText(
-                          text: '${data.quantity!.join('')}  item, Total  ',
-                          size: 14.sp,
-                          color: kblack.withOpacity(0.8),
-                        ),
-                        MyText(
-                          text: logic.oneItemPrice(data.price!, data.quantity!),
-                          size: 16.sp,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
+
+            return ReusableCard(data: data);
           },
         );
       },
@@ -465,14 +137,16 @@ class OrderConfirmWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Row(
-        children: [
-          Text('Status: '),
-          Text(
-            '${data.status!.capitalizeFirst!}',
-            style: TextStyle(color: Colors.red),
-          ),
-        ],
+      title: ListTile(
+        leading: Icon(Icons.watch_later_outlined, size: 24.h),
+        title: Text(
+          'Status: ',
+          style: TextStyle(fontSize: 16.sp),
+        ),
+        subtitle: Text(
+          '${data.status!.capitalizeFirst!}',
+          style: TextStyle(color: Colors.red, fontSize: 14.sp),
+        ),
       ),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -526,7 +200,7 @@ class OrderConfirmWidget extends StatelessWidget {
               );
             }
           },
-          child: Text('Save'),
+          child: Text('Mark As Confirm'),
         ),
       ],
     );
@@ -544,14 +218,18 @@ class OrderDeliveredWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Row(
-        children: [
-          Text('Status: '),
-          Text(
-            '${data.status!.capitalizeFirst!}',
-            style: TextStyle(color: Colors.red),
-          ),
-        ],
+      insetPadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      title: ListTile(
+        leading: Icon(Icons.pending, size: 24.h),
+        title: Text(
+          'Status: ',
+          style: TextStyle(fontSize: 16.sp),
+        ),
+        subtitle: Text(
+          '${data.status!.capitalizeFirst!}',
+          style: TextStyle(color: Colors.red, fontSize: 14.sp),
+        ),
       ),
       actions: [
         TextButton(
@@ -576,7 +254,7 @@ class OrderDeliveredWidget extends StatelessWidget {
               Navigator.pop(context);
             });
           },
-          child: Text('Update'),
+          child: Text('Mark As Delivered'),
         ),
       ],
     );

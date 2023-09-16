@@ -32,7 +32,7 @@ class MyButton extends StatelessWidget {
     double h = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: 56,
+      height: h * 0.085,
       width: width,
       child: ElevatedButton(
         style: ButtonStyle(

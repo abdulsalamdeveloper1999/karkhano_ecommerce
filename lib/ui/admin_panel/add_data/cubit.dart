@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/models/admin_model_data.dart';
-import 'package:e_commerce_store_karkhano/core/services/notidication_services_updated.dart';
 import 'package:e_commerce_store_karkhano/ui/admin_panel/add_data/state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../core/services/database.dart';
+import '../../../core/services/notification_services.dart';
 import '../../../core/widgets/custom_progress_dialog.dart';
 
 class AddDataCubit extends Cubit<AddDataState> {
@@ -26,15 +27,17 @@ class AddDataCubit extends Cubit<AddDataState> {
   }
 
   String adminToken = '';
-  FcmServices fcmServices = FcmServices();
-
-  void getData() {
-    fcmServices.getDeviceToken().then((value) {
+  MessagingService _messagingService = MessagingService();
+  void getData() async {
+    _messagingService.getDeviceToken().then((value) async {
       adminToken = value;
-      print('This is admin Token   ' + adminToken);
+      await FirebaseFirestore.instance
+          .collection('adminToken')
+          .doc('1999')
+          .set({
+        'token': adminToken,
+      });
     });
-    fcmServices.requestPermission();
-    fcmServices.initInfo();
   }
 
   void hideCustomProgressDialog(BuildContext context) {

@@ -62,11 +62,29 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    // Specifies one flavor dimension.
+    flavorDimensions "userTypes"
+    productFlavors {
+        admin {
+            dimension "userTypes"
+            resValue "string", "app_name", "DiscountDirectAdmin"
+            applicationIdSuffix ".admin"
+        }
+        non_admin {
+            dimension "userTypes"
+            resValue "string", "app_name", "DiscountDirect"
+            applicationIdSuffix ".nonAdmin"
+        }
+    }
 }
 
 flutter {
     source '../..'
 }
+
+
+
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

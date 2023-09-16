@@ -61,7 +61,8 @@ class HistoryCubit extends Cubit<HistoryState> {
     }
   }
 
-  String oneItemPrice(List<dynamic>? totalPrice, List<dynamic>? totalQuantity) {
+  String oneItemPrice(
+      List<dynamic>? totalPrice, List<dynamic>? totalQuantity, index) {
     if (totalPrice == null ||
         totalPrice.isEmpty ||
         totalQuantity == null ||
@@ -70,8 +71,8 @@ class HistoryCubit extends Cubit<HistoryState> {
     }
 
     double totalPriceValue =
-        (totalPrice[0] as num).toDouble(); // Convert to double
-    int totalQuantityValue = totalQuantity[0] as int;
+        (totalPrice[index] as num).toDouble(); // Convert to double
+    int totalQuantityValue = totalQuantity[index] as int;
 
     if (totalQuantityValue == 0) {
       return 'Invalid Quantity'; // Handle division by zero if needed

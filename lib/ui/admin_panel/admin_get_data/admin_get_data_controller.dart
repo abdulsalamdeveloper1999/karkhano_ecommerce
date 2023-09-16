@@ -13,6 +13,17 @@ class AdminGetDataController extends GetxController {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
   TextEditingController priceController = TextEditingController();
+  TextEditingController categoryController = TextEditingController();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    titleController.dispose();
+    descriptionController.dispose();
+    priceController.dispose();
+    categoryController.dispose();
+  }
 
   // @override
   // void onInit() {

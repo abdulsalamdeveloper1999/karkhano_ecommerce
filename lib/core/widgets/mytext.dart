@@ -30,14 +30,15 @@ class MyText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      overflow: overflow,
       style: TextStyle(
-          fontStyle: fontStyle,
-          fontSize: size,
-          fontWeight: weight,
-          color: color,
-          decoration: decoration,
-          fontFamily: fontFamily,
-          overflow: overflow),
+        fontStyle: fontStyle,
+        fontSize: size,
+        fontWeight: weight,
+        color: color,
+        decoration: decoration,
+        fontFamily: fontFamily,
+      ),
       textAlign: align,
       maxLines: maxLines,
     );

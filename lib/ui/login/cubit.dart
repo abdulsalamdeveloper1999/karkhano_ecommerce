@@ -14,6 +14,12 @@ class LoginCubit extends Cubit<LoginState> {
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isVisible = true;
+
+  void updateVisibilty() {
+    isVisible = !isVisible;
+    emit(LoginLoaded());
+  }
 
   @override
   Future<void> close() {
@@ -45,7 +51,7 @@ class LoginCubit extends Cubit<LoginState> {
                   color: kblack,
                 ),
                 title: Text(
-                  'Signin In',
+                  'Signing In',
                   style: TextStyle(
                     fontFamily: '',
                     fontSize: 14.sp,
@@ -79,11 +85,27 @@ class LoginCubit extends Cubit<LoginState> {
         hideCustomProgress(context);
         Get.snackbar(
           'Registration error',
-          'All fields are required',
+          '',
+          messageText: Text(
+            'All fields are required',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16.0,
+            ),
+          ),
+          titleText: Text(
+            'Oops!',
+            style: TextStyle(
+              color: Colors.red,
+              fontWeight: FontWeight.bold,
+              fontSize: 20.0,
+            ),
+          ),
           duration: Duration(seconds: 2),
-          backgroundColor: kblack,
-          colorText: kwhite,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
         );
+
         return;
       }
 

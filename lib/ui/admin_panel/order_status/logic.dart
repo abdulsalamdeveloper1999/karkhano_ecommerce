@@ -4,11 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/models/history_model.dart';
-import '../../../core/widgets/custom_progress_dialog.dart';
 import '../../../core/widgets/mytext.dart';
 import 'state.dart';
 
@@ -68,7 +68,37 @@ class OrderStatusLogic extends GetxController {
     showDialog(
       context: Get.context!,
       builder: (BuildContext context) {
-        return CustomProgressDialogWidget();
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          child: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: EdgeInsets.all(16),
+              child: ListTile(
+                leading: CircularProgressIndicator(
+                  color: kblack,
+                ),
+                title: Text(
+                  'Updating Status',
+                  style: TextStyle(
+                    fontFamily: '',
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                subtitle: Text(
+                  'Please Wait',
+                  style: TextStyle(
+                    fontFamily: '',
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
+              )),
+        );
       },
     );
     update();
@@ -295,7 +325,8 @@ class OrderStatusLogic extends GetxController {
     }
   }
 
-  String oneItemPrice(List<dynamic>? totalPrice, List<dynamic>? totalQuantity) {
+  String oneItemPrice(
+      List<dynamic>? totalPrice, List<dynamic>? totalQuantity, index) {
     if (totalPrice == null ||
         totalPrice.isEmpty ||
         totalQuantity == null ||
@@ -304,8 +335,8 @@ class OrderStatusLogic extends GetxController {
     }
 
     double totalPriceValue =
-        (totalPrice[0] as num).toDouble(); // Convert to double
-    int totalQuantityValue = totalQuantity[0] as int;
+        (totalPrice[index] as num).toDouble(); // Convert to double
+    int totalQuantityValue = totalQuantity[index] as int;
 
     if (totalQuantityValue == 0) {
       return 'Invalid Quantity'; // Handle division by zero if needed
