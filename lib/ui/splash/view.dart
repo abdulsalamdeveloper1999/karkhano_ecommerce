@@ -1,75 +1,3 @@
-// import 'package:e_commerce_store_karkhano/core/constants.dart';
-// import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-//
-// import 'cubit.dart';
-//
-// class SplashPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocProvider(
-//       create: (BuildContext context) => SplashCubit(),
-//       child: Builder(builder: (context) => _buildPage(context)),
-//     );
-//   }
-//
-//   Widget _buildPage(BuildContext context) {
-//     final cubit = BlocProvider.of<SplashCubit>(context);
-//
-//     return SafeArea(
-//       child: Scaffold(
-//         backgroundColor: kblack,
-//         body: BlocBuilder<SplashCubit, SplashState>(
-//           builder: (context, state) {
-//             return Center(
-//               child: Column(
-//                 mainAxisAlignment: MainAxisAlignment.center,
-//                 crossAxisAlignment: CrossAxisAlignment.center,
-//                 children: [
-//                   MyText(
-//                     text: 'Welcome To',
-//                     color: kwhite,
-//                     size: 22.sp,
-//                     fontFamily: 'EncodeSansRegular',
-//                   ),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       Image.asset(
-//                         'assets/icons_images/shopping-bag.png',
-//                         height: 32,
-//                         color: kwhite,
-//                       ),
-//                       SizedBox(width: 5.w),
-//                       MyText(
-//                         text: 'DiscountDirect',
-//                         color: kwhite,
-//                         size: 32.sp,
-//                         fontFamily: 'EncodeSans',
-//                         weight: FontWeight.normal,
-//                       ),
-//                     ],
-//                   ),
-//                   MyText(
-//                     text: 'The New World',
-//                     color: kwhite,
-//                     size: 22.sp,
-//                     fontFamily: 'EncodeSans',
-//                     weight: FontWeight.normal,
-//                   ),
-//                 ],
-//               ),
-//             );
-//           },
-//         ),
-//       ),
-//     );
-//   }
-// }
-// // DiscountDirect
-// splash_page.dart
 import 'dart:ui';
 
 import 'package:e_commerce_store_karkhano/core/constants.dart';
@@ -80,19 +8,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'cubit.dart';
-// Import the SplashCubit class
 
 class SplashPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // final cubit = BlocProvider.of<SplashCubit>(context);
-    // cubit.loadSplashData(); // Move this line outside of BlocBuilder
     return BlocProvider(
       create: (context) => SplashCubit()..loadSplashData(),
       child: BlocBuilder<SplashCubit, SplashState>(
         builder: (context, state) {
           return SplashView();
-          //...
         },
       ),
     );

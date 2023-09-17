@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/models/admin_model_data.dart';
+import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../core/models/shopping_cart_model.dart';
@@ -74,11 +76,16 @@ class ProductDetailCubit extends Cubit<ProductDetailState> {
       if (!logic.currentUserInfoList.isNotEmpty) {
         // If the user is not signed in, show an error message
         Get.snackbar(
-          'Error',
+          '',
           'Please sign in to add products to favorites',
+          titleText: MyText(
+            text: 'Error',
+            color: Colors.red,
+            size: 16.sp,
+          ),
           colorText: kwhite,
           backgroundColor:
-              Colors.red, // You can use a different color for error messages
+              kblack, // You can use a different color for error messages
           duration: Duration(seconds: 2),
         );
         return; // Exit the function without performing any actions

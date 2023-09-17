@@ -57,8 +57,7 @@ class HomeCubit extends Cubit<HomeState> {
       // Filter the data from the database service
       final data = await _databaseService.getData(selectedCategory);
       final filteredData = data.where((product) {
-        final title = product.adminTitle?.toLowerCase() ??
-            ''; // Replace 'title' with the correct field name
+        final title = product.adminTitle?.toLowerCase() ?? '';
         final search = text.toLowerCase();
         return title.contains(search);
       }).toList();

@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../core/models/user_model.dart';
+import '../../core/widgets/mytext.dart';
 import '../profie/profile_controller.dart';
 import 'state.dart';
 
@@ -139,8 +140,13 @@ class SignupCubit extends Cubit<SignupState> {
         }
         hideCustomProgressDialog(context);
         Get.snackbar(
-          'Registration error',
+          '',
           'Invalid email format',
+          titleText: MyText(
+            text: 'Registration Error',
+            color: Colors.red,
+            size: 16.sp,
+          ),
           duration: Duration(seconds: 2),
           backgroundColor: kblack,
           colorText: kwhite,
@@ -152,8 +158,13 @@ class SignupCubit extends Cubit<SignupState> {
         // Check if password is valid
         hideCustomProgressDialog(context);
         Get.snackbar(
-          'Registration error',
+          '',
           'Password must be at least 8 characters long and contain letters and numbers',
+          titleText: MyText(
+            text: 'Registration Error',
+            color: Colors.red,
+            size: 16.sp,
+          ),
           duration: Duration(seconds: 2),
           backgroundColor: kblack,
           colorText: kwhite,
@@ -197,7 +208,7 @@ class SignupCubit extends Cubit<SignupState> {
         colorText: kwhite,
       );
       if (kDebugMode) {
-        print('User registered successfully');
+        debugPrint('User registered successfully');
       }
 
       // Now, you can explicitly log the user in
@@ -215,50 +226,39 @@ class SignupCubit extends Cubit<SignupState> {
       // Handle specific FirebaseAuth exceptions
       hideCustomProgressDialog(context);
 
-      switch (e.code) {
-        case 'email-already-in-use':
-          Get.snackbar(
-            'Registration error',
-            'Email address is already in use',
-            duration: Duration(seconds: 2),
-            backgroundColor: kblack,
-            colorText: kwhite,
-          );
-          break;
-        case 'weak-password':
-          Get.snackbar(
-            'Registration error',
-            'Password is too weak',
-            duration: Duration(seconds: 2),
-            backgroundColor: kblack,
-            colorText: kwhite,
-          );
-          break;
-        default:
-          Get.snackbar(
-            'Registration error',
-            e.message ?? 'Unknown error',
-            duration: Duration(seconds: 2),
-            backgroundColor: kblack,
-            colorText: kwhite,
-          );
-          break;
-      }
+      Get.snackbar(
+        '',
+        e.message!,
+        titleText: MyText(
+          text: 'Registration error',
+          size: 16.sp,
+          color: Colors.red,
+        ),
+        duration: Duration(seconds: 2),
+        backgroundColor: kblack,
+        colorText: kwhite,
+      );
+
       if (kDebugMode) {
-        print('Firebase Auth Error: ${e.code} - ${e.message}');
+        debugPrint('Firebase Auth Error: ${e.code} - ${e.message}');
       }
     } catch (error) {
       // Handle other exceptions (non-Firebase Auth exceptions)
       hideCustomProgressDialog(context);
       Get.snackbar(
-        'Registration error',
+        '',
         '$error',
+        titleText: MyText(
+          text: 'Registration error',
+          size: 16.sp,
+          color: Colors.red,
+        ),
         duration: Duration(seconds: 2),
         backgroundColor: kblack,
         colorText: kwhite,
       );
       if (kDebugMode) {
-        print('Registration error: $error');
+        debugPrint('Registration error: $error');
       }
     }
   }

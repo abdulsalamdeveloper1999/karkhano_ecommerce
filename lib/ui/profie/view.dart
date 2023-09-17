@@ -1,167 +1,6 @@
-// import 'package:e_commerce_store_karkhano/core/constants.dart';
-// import 'package:e_commerce_store_karkhano/core/widgets/elevated_button.dart';
-// import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
-// import 'package:e_commerce_store_karkhano/ui/profie/profile_controller.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:get/get.dart';
-// import 'package:line_icons/line_icons.dart';
-//
-// import '../login/view.dart';
-//
-// class ProfilePage extends StatefulWidget {
-//   @override
-//   State<ProfilePage> createState() => _ProfilePageState();
-// }
-//
-// class _ProfilePageState extends State<ProfilePage> {
-//   @override
-//   void initState() {
-//     super.initState();
-//     final userId = FirebaseAuth.instance.currentUser?.uid;
-//     if (userId != null) {
-//       Get.find<ProfileController>().getUser(userId);
-//     }
-//   }
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     final ProfileController profileController = Get.put(ProfileController());
-//
-//     return SafeArea(
-//       child: Scaffold(
-//         appBar: _buildAppbar(),
-//         body: GetBuilder<ProfileController>(
-//           builder: (context) {
-//             if (profileController.userModel == null) {
-//               return Center(
-//                 child: Padding(
-//                   padding: const EdgeInsets.symmetric(horizontal: 15),
-//                   child: Column(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     children: [
-//                       Icon(
-//                         LineIcons.alternateSignIn,
-//                         size: 100,
-//                       ),
-//                       MyButton(
-//                         text: 'Login/SignUp',
-//                         onPress: () {
-//                           Get.to(() => LoginPage());
-//                         },
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               );
-//             } else {
-//               // Display profile UI here
-//               final userModel =
-//                   profileController.userModel!; // Non-null assertion
-//               return Padding(
-//                 padding: const EdgeInsets.symmetric(horizontal: 20),
-//                 child: Column(
-//                   crossAxisAlignment: CrossAxisAlignment.center,
-//                   mainAxisAlignment: MainAxisAlignment.center,
-//                   children: [
-//                     Flexible(child: Container()),
-//                     CircleAvatar(
-//                       radius: 40,
-//                       backgroundImage:
-//                           AssetImage('assets/icons_images/avatar.png'),
-//                     ),
-//                     SizedBox(height: 16.h),
-//                     _buildRow(
-//                       label: 'Email',
-//                       value: userModel.email ?? '', // Null check
-//                     ),
-//                     _buildRow(
-//                       label: 'Name',
-//                       value: userModel.name ?? '', // Null check
-//                     ),
-//                     _buildRow(
-//                       label: 'Contact Number',
-//                       value: userModel.phoneNumber ?? '', // Null check
-//                     ),
-//                     _buildRow(
-//                       label: 'Address',
-//                       value: userModel.address ?? '', // Null check
-//                     ),
-//                     Spacer(),
-//                     MyButton(
-//                       textColor: kblack,
-//                       bgcolor: Colors.transparent,
-//                       bdcolor: kblack,
-//                       text: 'Edit Profile',
-//                       onPress: () {
-//                         // profileController.signOut();
-//                       },
-//                     ),
-//                     SizedBox(height: 16.h),
-//                     MyButton(
-//                       text: 'Sign Out ',
-//                       onPress: () {
-//                         profileController.signOut();
-//                         print('user signout');
-//                       },
-//                     ),
-//                     SizedBox(height: 16.h),
-//                   ],
-//                 ),
-//               );
-//             }
-//           },
-//         ),
-//       ),
-//     );
-//   }
-//
-//   Row _buildRow({label, value}) {
-//     return Row(
-//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//       children: [
-//         MyText(
-//           text: label,
-//           size: 14.sp,
-//         ),
-//         MyText(
-//           text: value,
-//           size: 16.sp,
-//         ),
-//       ],
-//     );
-//   }
-//
-//   AppBar _buildAppbar() {
-//     return AppBar(
-//       flexibleSpace: Container(
-//         padding: EdgeInsets.symmetric(vertical: 15),
-//         decoration: BoxDecoration(
-//           color: kblack,
-//           borderRadius: BorderRadius.only(
-//             bottomLeft: Radius.circular(15),
-//             bottomRight: Radius.circular(15),
-//           ),
-//         ),
-//         child: Row(
-//           mainAxisAlignment: MainAxisAlignment.center,
-//           children: [
-//             MyText(
-//               text: 'Profile',
-//               size: 18.sp,
-//               color: kwhite,
-//               fontFamily: 'EncodeSansBold',
-//             ),
-//           ],
-//         ),
-//       ),
-//       automaticallyImplyLeading: false,
-//     );
-//   }
-// }
 import 'package:e_commerce_store_karkhano/core/constants.dart';
 import 'package:e_commerce_store_karkhano/core/models/user_model.dart';
+import 'package:e_commerce_store_karkhano/ui/login/view.dart';
 import 'package:e_commerce_store_karkhano/ui/profie/profile_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -170,21 +9,11 @@ import 'package:get/get.dart';
 
 import '../../core/widgets/mytext.dart';
 import '../history/view.dart';
-import '../login/view.dart';
 
 class ProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   centerTitle: true,
-      //   title: MyText(
-      //     text: 'Profile',
-      //     size: 16.sp,
-      //     weight: FontWeight.w700,
-      //   ),
-      //   automaticallyImplyLeading: false,
-      // ),
       body: GetBuilder<ProfileController>(builder: (logic) {
         return Center(
           child: SingleChildScrollView(
@@ -363,31 +192,39 @@ class ProfileInfoWidget extends StatelessWidget {
           size: 14,
           weight: FontWeight.normal,
         ),
-        Container(
-          width: 100,
-          padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: ElevatedButton(
-            onPressed: () {
-              Get.to(() => LoginPage());
-            },
-            style: ButtonStyle(
-              elevation:
-                  MaterialStateProperty.all(8), // Add elevation for a 3D effect
-              padding: MaterialStateProperty.all(EdgeInsets.all(16.0)),
-              backgroundColor: MaterialStateProperty.all(
-                Colors.blue,
-              ), // Button color
+        SizedBox(height: Get.height * 0.05),
+        GestureDetector(
+          onTap: () {
+            Get.to(() => LoginPage());
+          },
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: Get.width * 0.09),
+            width: double.infinity,
+            padding: EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: kblack,
+              borderRadius: BorderRadius.circular(30),
             ),
-            child: Text(
-              'Login',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white, // Button text color
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                MyText(
+                  text: 'LOGIN',
+                  color: kwhite,
+                  letterSpacing: Get.width * 0.02,
+                  size: 16.sp,
+                  weight: FontWeight.w700,
+                  fontFamily: 'EncodeSansBold',
+                ),
+                SizedBox(width: 25),
+                Icon(
+                  Icons.arrow_forward,
+                  color: kwhite,
+                ),
+              ],
             ),
           ),
-        ),
+        )
       ],
     );
   }

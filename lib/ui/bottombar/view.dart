@@ -13,14 +13,11 @@ import '../profie/view.dart';
 import '../shopping_cart/controller.dart';
 import 'cubit.dart';
 
-// FcmServices _fcmServices = FcmServices();
-
 class BottombarPage extends StatelessWidget {
   BottombarPage({currentIndex});
 
   var currentIndex;
 
-  // Define the icons and their corresponding labels
   final List<IconData> icons = [
     Icons.home_outlined,
     Icons.shopping_bag_outlined,

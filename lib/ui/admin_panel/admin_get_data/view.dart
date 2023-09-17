@@ -29,8 +29,8 @@ class AdminGetDataPage extends GetView<AdminGetDataController> {
                     itemBuilder: (BuildContext context, int index) {
                       final data = logic.adminData[index];
 
-                      print(data.adminTitle);
-                      print(data.adminDescription);
+                      // print(data.adminTitle);
+                      // print(data.adminDescription);
 
                       return Container(
                         padding: EdgeInsets.all(15),

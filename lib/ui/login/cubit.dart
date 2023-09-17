@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:e_commerce_store_karkhano/core/constants.dart';
+import 'package:e_commerce_store_karkhano/core/widgets/mytext.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -132,9 +133,15 @@ class LoginCubit extends Cubit<LoginState> {
       // After successful login, navigate back to the previous screen
       Get.back();
     } on FirebaseAuthException catch (e) {
+      print(e.toString());
       Get.snackbar(
-        'Error',
-        e.toString(),
+        '',
+        e.message!,
+        titleText: MyText(
+          text: 'Error',
+          color: Colors.red,
+          size: 16.sp,
+        ),
         backgroundColor: kblack,
         colorText: kwhite,
       );

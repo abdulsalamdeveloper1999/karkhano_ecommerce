@@ -22,10 +22,11 @@ class StaggeredDualView extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final width = constraints.maxWidth;
 
-        final itemHight = (width * 0.3) / aspectRatio;
-        // final height = constraints.maxHeight + itemHight;
+        final itemHeight = (width * 0.3) / aspectRatio;
+        // final height = constraints.maxHeight + itemHeight;
         return GridView.builder(
-          padding: EdgeInsets.only(top: itemHight / 80, bottom: itemHight),
+          padding:
+              EdgeInsets.only(top: itemHeight / 80, bottom: itemHeight * 1.75),
           itemCount: itemCount,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
@@ -37,7 +38,7 @@ class StaggeredDualView extends StatelessWidget {
             return Transform.translate(
               offset: Offset(
                 0.0,
-                index.isOdd ? itemHight * 0.15 : 0.0,
+                index.isOdd ? itemHeight * 0.15 : 0.0,
               ),
               child: itemBuilder(context, index),
             );

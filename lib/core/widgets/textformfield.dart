@@ -13,7 +13,8 @@ class MyField extends StatelessWidget {
       hintstyle,
       controller,
       visibile,
-      keyboardType;
+      keyboardType,
+      labelText;
 
   String? Function(String?)? validator;
   MyField({
@@ -25,6 +26,7 @@ class MyField extends StatelessWidget {
     this.prefixIcon,
     this.validator,
     this.keyboardType,
+    this.labelText,
   });
 
   @override
@@ -40,7 +42,7 @@ class MyField extends StatelessWidget {
     );
 
     var kLighGreyStyle = TextStyle(
-      color: Color(0xff878787),
+      color: Colors.grey,
       fontFamily: 'EncodeSansRegular',
     );
     return TextFormField(
@@ -60,7 +62,9 @@ class MyField extends StatelessWidget {
         enabledBorder: kborder,
         border: kborder,
         hintText: hintText,
+        labelText: labelText,
         hintStyle: kLighGreyStyle,
+        // labelStyle: kLighGreyStyle,
         // labelStyle: kLighGreyStyle,
         // labelText: hintText,
         suffixIcon: suffixIcon,

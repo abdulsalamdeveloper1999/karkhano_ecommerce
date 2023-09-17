@@ -1,5 +1,6 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../../core/models/user_model.dart';
@@ -53,9 +54,7 @@ class ProfileController extends GetxController {
       // Notify the UI to update
       update();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error updating user profile: $e');
-      }
+      log('Error updating user profile: $e');
     }
   }
 
@@ -68,9 +67,7 @@ class ProfileController extends GetxController {
           userList.any((user) => user.userId == currentUserUID);
 
       if (currentUserExists) {
-        if (kDebugMode) {
-          print('Current user UID: $currentUserUID');
-        }
+        log('Current user UID: $currentUserUID');
 
         // Find and print the current user's info
         UserModel? currentUserInfo = userList.firstWhere(
@@ -78,13 +75,12 @@ class ProfileController extends GetxController {
         );
 
         if (currentUserInfo != null) {
-          if (kDebugMode) {
-            print('Current User Info:');
-            print('User ID: ${currentUserInfo.userId}');
-            print('User Name: ${currentUserInfo.name}');
-            print('User Number: ${currentUserInfo.phoneNumber}');
-            print('User Address: ${currentUserInfo.address}');
-          }
+          log('Current User Info:');
+          log('User ID: ${currentUserInfo.userId}');
+          log('User Name: ${currentUserInfo.name}');
+          log('User Number: ${currentUserInfo.phoneNumber}');
+          log('User Address: ${currentUserInfo.address}');
+
           // Clear the list before adding to ensure only one user's data is stored
 
           currentUserInfoList.clear();
@@ -93,21 +89,18 @@ class ProfileController extends GetxController {
           currentUserInfoList.add(currentUserInfo);
           isLoading = false;
         } else {
-          if (kDebugMode) {
-            print('Current user info not found in userList');
-          }
+          log('Current user info not found in userList');
+
           isLoading = false;
         }
       } else {
-        if (kDebugMode) {
-          print('Current user not found in userList');
-        }
+        log('Current user not found in userList');
+
         isLoading = false;
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching user data: $e');
-      }
+      log('Error fetching user data: $e');
+
       isLoading = false;
     }
   }
@@ -121,7 +114,7 @@ class ProfileController extends GetxController {
 
       update(); // Notify the UI to update
     } catch (e) {
-      print(e.toString());
+      log(e.toString());
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,6 @@ import 'package:e_commerce_store_karkhano/core/models/history_model.dart';
 import 'package:e_commerce_store_karkhano/core/models/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
 
 abstract class DSDataBase {
   Future<bool> add_data(Map<String, dynamic> data);
@@ -37,9 +37,9 @@ class DataBaseServices extends DSDataBase {
 
     // var uid = _firestore.collection('adminData').doc().id;
     var uid = FirebaseFirestore.instance.collection('adminData').doc().id;
-    if (kDebugMode) {
-      print('${uid}@@@@@@@@@@@@@@@@@');
-    }
+
+    log('${uid}@@@@@@@@@@@@@@@@@');
+
     data['adminUid'] = uid;
 
     await _firestore
@@ -49,9 +49,8 @@ class DataBaseServices extends DSDataBase {
         .then((v) => rsp = true)
         .onError((error, stackTrace) => rsp = false);
 
-    if (kDebugMode) {
-      print('success%%%%%%%%%%%%%%%%%%%%%%55');
-    }
+    log('success%%%%%%%%%%%%%%%%%%%%%%55');
+
     return rsp;
   }
 
@@ -68,7 +67,7 @@ class DataBaseServices extends DSDataBase {
         return AdminModel.fromMap(data);
       }).toList();
     } catch (e) {
-      print('Error retrieving data: $e');
+      log('Error retrieving data: $e');
     }
 
     return dataList;
@@ -76,7 +75,7 @@ class DataBaseServices extends DSDataBase {
 
   @override
   Future<List<String>> uploadImagesToFirebaseStorage(
-      List<File> images, String selectedOption) async {
+      List images, String selectedOption) async {
     final List<String> downloadUrls = [];
 
     try {
@@ -98,22 +97,16 @@ class DataBaseServices extends DSDataBase {
           String downloadURL = await fileRef.getDownloadURL();
           downloadUrls.add(downloadURL); // Add the URL to the list
 
-          if (kDebugMode) {
-            debugPrint('Image $i uploaded. Download URL: $downloadURL');
-          }
+          log('Image $i uploaded. Download URL: $downloadURL');
         }
       }
 
-      if (kDebugMode) {
-        debugPrint('All images uploaded to Firebase Storage');
-      }
+      log('All images uploaded to Firebase Storage');
 
       // Return the list of download URLs
       return downloadUrls;
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint('Error uploading images: $e');
-      }
+      log('Error uploading images: $e');
       return []; // Return an empty list in case of an error
     }
   }
@@ -131,9 +124,7 @@ class DataBaseServices extends DSDataBase {
         });
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching data: $e');
-      }
+      log(('Error fetching data: $e'));
     }
     return model;
   }
@@ -148,8 +139,7 @@ class DataBaseServices extends DSDataBase {
       // Delete the document
       await docRef.delete();
     } catch (e) {
-      print('Error deleting data: $e');
-      throw e; // You can handle errors as needed
+      log('Error deleting data: $e');
     }
   }
 
@@ -176,12 +166,8 @@ class DataBaseServices extends DSDataBase {
   }
 
   Future<bool> addHistory(Map<String, dynamic> data) async {
-    // var uid = FirebaseFirestore.instance.collection('adminData').doc().id;
     bool rsp = false;
     var uid = _firestore.collection('adminData').doc().id;
-    // if (kDebugMode) {
-    //   print('${uid}@@@@@@@@@@@@@@@@@');
-    // }
     data['collectionUid'] = uid;
 
     await _firestore
@@ -191,9 +177,8 @@ class DataBaseServices extends DSDataBase {
         .then((v) => rsp = true)
         .onError((error, stackTrace) => rsp = false);
 
-    if (kDebugMode) {
-      print('success%%%%%%%%%%%%%%%%%%%%%%55');
-    }
+    log('history has been added log of datbase services');
+
     return rsp;
   }
 
@@ -219,9 +204,7 @@ class DataBaseServices extends DSDataBase {
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching data: $e');
-      }
+      log('Error fetching data: $e');
     }
     return model;
   }
@@ -252,8 +235,7 @@ class DataBaseServices extends DSDataBase {
 
   Future<bool> addfav(Map<String, dynamic> data, collectionUid) async {
     bool rsp = false;
-    // var uid = _firestore.collection('favorites').doc().id;
-    // print('${uid}@@@@@@@@@@@@@@@@@');
+
     var userId = FirebaseAuth.instance.currentUser!.uid;
     data['userId'] = userId;
 
@@ -264,32 +246,18 @@ class DataBaseServices extends DSDataBase {
         .then((v) => rsp = true)
         .onError((error, stackTrace) => rsp = false);
 
-    if (kDebugMode) {
-      print('success removed favoritessssssssssssssssssssssssssssss');
-
-      print(collectionUid);
-    }
     return rsp;
   }
 
-  Future<bool> deleteFav(useruid) async {
+  Future<bool> deleteFav(userUid) async {
     bool rsp = false;
-    // var uid = _firestore.collection('adminData').doc().id;
-    // print('${uid}@@@@@@@@@@@@@@@@@');
-    // data['uid'] = uid;
 
     await _firestore
         .collection('favorites')
-        .doc(useruid)
+        .doc(userUid)
         .delete()
         .then((v) => rsp = true)
         .onError((error, stackTrace) => rsp = false);
-
-    if (kDebugMode) {
-      print('success%%%%%%%%%%%%%%%%%%%%%%55');
-
-      print(useruid);
-    }
 
     return rsp;
   }
@@ -315,9 +283,7 @@ class DataBaseServices extends DSDataBase {
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching data: $e');
-      }
+      log(e.toString());
     }
     return model;
   }
@@ -334,9 +300,7 @@ class DataBaseServices extends DSDataBase {
         });
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching data: $e');
-      }
+      log(e.toString());
     }
     return model;
   }
@@ -361,78 +325,21 @@ class DataBaseServices extends DSDataBase {
 
       await userRef.update(dataToUpdate);
     } catch (e) {
-      print('Error updating user profile in Firestore: $e');
+      log('Error updating user profile in Firestore: $e');
     }
   }
 
   Future<void> editData(
       String documentId, Map<String, dynamic> editedData) async {
     try {
-      // Replace 'your_collection_name' with the actual name of your collection in Firestore
-      // 'documentId' is the unique identifier for the document you want to edit
-      // 'editedData' contains the fields and their updated values
       await _firestore
           .collection('adminData')
           .doc(documentId)
           .update(editedData);
     } catch (e) {
       // Handle any errors that occur during the edit process
-      print('Error editing data: $e');
+      log('Error editing data: $e');
       throw e;
     }
   }
-
-  //
-  // Future<void> updateAdminData(
-  //     String documentId, Map<String, dynamic> updatedData) async {
-  //   try {
-  //     await _firestore
-  //         .collection('adminData')
-  //         .doc(documentId)
-  //         .update(updatedData);
-  //   } catch (e) {
-  //     print('Error updating admin data: $e');
-  //     throw e;
-  //   }
-  // }
-
-  // Future<void> updateAdminData(String collectionId,
-  //     {String? adminTitle,
-  //     String? adminDescription,
-  //     String? adminPrice}) async {
-  //   try {
-  //     final userRef =
-  //         FirebaseFirestore.instance.collection('adminData').doc(collectionId);
-  //
-  //     Map<String, dynamic> dataToUpdate = {};
-  //
-  //     if (adminTitle != null) {
-  //       dataToUpdate['adminTitle'] = adminTitle;
-  //     }
-  //     if (adminDescription != null) {
-  //       dataToUpdate['adminDescription'] = adminDescription;
-  //     }
-  //     if (adminPrice != null) {
-  //       dataToUpdate['address'] = adminPrice;
-  //     }
-  //
-  //     await userRef.update(dataToUpdate);
-  //   } catch (e) {
-  //     print('Error updating user profile in Firestore: $e');
-  //   }
-  // }
-
-  // Future<AdminModel> getAdminDataById(String documentId) async {
-  //   final DocumentSnapshot doc =
-  //       await _firestore.collection('adminData').doc(documentId).get();
-  //   final data = AdminModel.fromMap(doc.data() as Map<String, dynamic>);
-  //   return data;
-  // }
-  //
-  // Future<void> updateData(String documentId, AdminModel updatedData) async {
-  //   await _firestore
-  //       .collection('adminData')
-  //       .doc(documentId)
-  //       .update(updatedData.toMap());
-  // }
 }

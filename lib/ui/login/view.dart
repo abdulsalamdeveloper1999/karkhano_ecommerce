@@ -1,3 +1,4 @@
+import 'package:e_commerce_store_karkhano/ui/forget_password/view.dart';
 import 'package:e_commerce_store_karkhano/ui/login/state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -103,8 +104,6 @@ class LoginCard extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // widget(child: Icon(Icons.arrow_back_ios)),
-
               SizedBox(height: Get.height * 0.1),
               Icon(
                 Icons.android,
@@ -143,6 +142,23 @@ class LoginCard extends StatelessWidget {
                   );
                 },
               ),
+              SizedBox(height: 16.h),
+              GestureDetector(
+                onTap: () {
+                  Get.to(() => ForgetPasswordPage());
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    MyText(
+                      text: 'Forget Password',
+                      size: 14.sp,
+                    ),
+                    SizedBox(width: 5.w),
+                    Icon(Icons.double_arrow_outlined),
+                  ],
+                ),
+              ),
               SizedBox(height: Get.height * 0.09),
               MyButton(
                 bdcolor: kblack,
@@ -155,28 +171,6 @@ class LoginCard extends StatelessWidget {
                 },
               ),
               SizedBox(height: 16.sp),
-
-              // GestureDetector(
-              //   onTap: () {
-              //     Get.to(() => SignupPage());
-              //   },
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.center,
-              //     children: [
-              //       MyText(
-              //         text: 'Not a member?',
-              //         fontFamily: 'EncodeSansSemiBold',
-              //         size: 16.sp,
-              //       ),
-              //       MyText(
-              //         text: ' Register Now',
-              //         fontFamily: 'EncodeSansBold',
-              //         size: 16.sp,
-              //         color: klogin,
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           ),
         ),

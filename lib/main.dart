@@ -60,6 +60,9 @@ class _MyAppState extends State<MyApp> {
       child: ScreenUtilInit(
         child: GetMaterialApp(
           theme: ThemeData(
+            snackBarTheme: SnackBarThemeData(
+              backgroundColor: kblack,
+            ),
             useMaterial3: true,
             fontFamily: 'EncodeSansMedium',
             primarySwatch: generateMaterialColor(kblack),
