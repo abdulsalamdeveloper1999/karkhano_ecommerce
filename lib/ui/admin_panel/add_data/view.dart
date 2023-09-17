@@ -59,7 +59,7 @@ class Add_dataPage extends StatelessWidget {
                             padding: EdgeInsets.all(8),
                             margin: EdgeInsets.only(top: 15),
                             width: Get.width,
-                            height: 150.h,
+                            height: Get.height * 0.25,
                             decoration: BoxDecoration(
                               color: kblack,
                               borderRadius: BorderRadius.circular(8),
@@ -122,9 +122,9 @@ class Add_dataPage extends StatelessWidget {
                                                       BorderRadius.circular(8),
                                                   child: Image.file(
                                                     cubit.images[index],
-                                                    height: 75.h,
-                                                    width: 85.w,
-                                                    fit: BoxFit.fill,
+                                                    height: 85.h,
+                                                    width: 85.h,
+                                                    fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),

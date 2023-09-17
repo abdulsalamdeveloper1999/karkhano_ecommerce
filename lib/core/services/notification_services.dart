@@ -29,7 +29,7 @@ class MessagingService {
   }
 
   Future<void> init(BuildContext context) async {
-    debugPrint('new api call');
+    // debugPrint('new api call');
     // Requesting permission for notifications
     NotificationSettings settings = await _fcm.requestPermission(
       alert: true,
@@ -41,7 +41,7 @@ class MessagingService {
       sound: true,
     );
 
-    debugPrint(
+    log(
       'User granted notifications permission: ${settings.authorizationStatus}',
     );
 

@@ -1,10 +1,11 @@
 import 'package:e_commerce_store_karkhano/core/constants.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../../core/models/admin_model_data.dart';
 import '../../../core/services/database.dart';
+import '../../../core/widgets/mytext.dart';
 
 class AdminGetDataController extends GetxController {
   var isLoading = true.obs;
@@ -25,15 +26,6 @@ class AdminGetDataController extends GetxController {
     categoryController.dispose();
   }
 
-  // @override
-  // void onInit() {
-  //   fetchData();
-  //   super.onInit();
-  //   ever(adminData, (_) {
-  //     update();
-  //   });
-  // }
-
   @override
   void onReady() {
     super.onReady();
@@ -50,11 +42,19 @@ class AdminGetDataController extends GetxController {
       adminData.assignAll(data);
       // print('${adminData.first.adminPrice}');
       // print('${adminData.map((element) => element.adminTitle)}');
-      print('${adminData.map((element) => element.adminImages)}');
+      // print('${adminData.map((element) => element.adminImages)}');
     } catch (e) {
-      if (kDebugMode) {
-        print('Error fetching admin data: $e');
-      }
+      Get.snackbar(
+        '',
+        e.toString(),
+        titleText: MyText(
+          text: 'Ops!',
+          size: 16.sp,
+        ),
+      );
+      // if (kDebugMode) {
+      //   print('Error fetching admin data: $e');
+      // }
     } finally {
       isLoading.value = false;
     }
@@ -74,9 +74,17 @@ class AdminGetDataController extends GetxController {
 
       update();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error deleting data: $e');
-      }
+      // if (kDebugMode) {
+      //   print('Error deleting data: $e');
+      // }
+      Get.snackbar(
+        '',
+        e.toString(),
+        titleText: MyText(
+          text: 'Ops!',
+          size: 16.sp,
+        ),
+      );
     } finally {
       isLoading.value = false;
     }
@@ -97,9 +105,17 @@ class AdminGetDataController extends GetxController {
       );
       update();
     } catch (e) {
-      if (kDebugMode) {
-        print('Error editing data: $e');
-      }
+      // if (kDebugMode) {
+      //   print('Error editing data: $e');
+      // }
+      Get.snackbar(
+        '',
+        e.toString(),
+        titleText: MyText(
+          text: 'Ops!',
+          size: 16.sp,
+        ),
+      );
     } finally {
       isLoading.value = false;
     }

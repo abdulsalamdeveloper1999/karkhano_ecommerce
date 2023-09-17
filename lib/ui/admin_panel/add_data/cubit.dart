@@ -67,7 +67,7 @@ class AddDataCubit extends Cubit<AddDataState> {
     emit(ImageLoad());
   }
 
-  List<File> images = <File>[];
+  List images = [];
   final ImagePicker picker = ImagePicker();
 
   // Method to add a new image
@@ -84,9 +84,13 @@ class AddDataCubit extends Cubit<AddDataState> {
 
   // Modify _pickFromGallery method
   Future<void> pickFromGallery() async {
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 80,
+    );
     if (pickedFile != null && images.length < 6) {
       // Use the addImage method to add the new image
+
       addImage(File(pickedFile.path));
     } else {
       // Show a snackbar message if the maximum number of images has been reached

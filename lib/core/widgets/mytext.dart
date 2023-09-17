@@ -11,9 +11,10 @@ class MyText extends StatelessWidget {
   final maxLines;
   final overflow;
   final fontStyle;
+  final letterSpacing;
 
   const MyText({
-    super.key,
+    this.letterSpacing,
     this.fontStyle,
     this.overflow,
     required this.text,
@@ -32,6 +33,7 @@ class MyText extends StatelessWidget {
       text,
       overflow: overflow,
       style: TextStyle(
+        letterSpacing: letterSpacing,
         fontStyle: fontStyle,
         fontSize: size,
         fontWeight: weight,

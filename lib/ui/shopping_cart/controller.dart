@@ -110,7 +110,7 @@ class ShoppingCartController extends GetxController {
     update();
   }
 
-  void showCustomProgressDialog(BuildContext context) {
+  void showCustomProgressDialog(context) {
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -150,14 +150,11 @@ class ShoppingCartController extends GetxController {
     );
   }
 
-  void hideCustomProgressDialog(BuildContext context) {
-    Navigator.of(context).pop();
+  void hideCustomProgressDialog(context) {
+    Navigator.pop(context);
   }
 
-  Future<void> uploadHistory(
-    ShoppingCartItemModel cartItem,
-    BuildContext context,
-  ) async {
+  Future<void> uploadHistory(context) async {
     showCustomProgressDialog(context);
     var userId = FirebaseAuth.instance.currentUser!.uid;
     DateTime currentDate = DateTime.now();
@@ -180,18 +177,20 @@ class ShoppingCartController extends GetxController {
         quantity: cartItems.map((element) => element.quantity).toList(),
         date: timestamp, // Use the Firestore Timestamp here
         // time: timestamp, // Use the Firestore Timestamp here
-        images: cartItem.adminImages,
+        images: cartItems.expand((element) => element.adminImages).toList(),
       );
 
       await DataBaseServices().addHistory(data.toMap());
-      await sendEmailToUserAndAdmin();
+
       hideCustomProgressDialog(context);
 
+      print('data has been added');
       Get.to(() => OrderSuccessScreen());
+      await sendEmailToUserAndAdmin();
       cartItems.clear();
       initialValuesList.clear();
       totalPrice.value = 0.0;
-      print(DateTime.now());
+      // print(DateTime.now());
     } catch (e) {
       hideCustomProgressDialog(context);
       if (kDebugMode) {
@@ -279,34 +278,34 @@ class ShoppingCartController extends GetxController {
       final adminSendReport = await send(adminMessage, smtpServer);
 
       // Capture relevant information about the email send operations
-      var userEmailReport = {
-        'sentDate': DateTime.now().toUtc().toString(),
-        'status': userSendReport.toString(),
-        'Name': signInUserName,
-        'Email': signInUserEmail,
-      };
+      // var userEmailReport = {
+      //   'sentDate': DateTime.now().toUtc().toString(),
+      //   'status': userSendReport.toString(),
+      //   'Name': signInUserName,
+      //   'Email': signInUserEmail,
+      // };
 
-      var adminEmailReport = {
-        'sentDate': DateTime.now().toUtc().toString(),
-        'status': adminSendReport.toString(),
-        'Name': 'Zayn',
-        'Email': adminEmail,
-      };
+      // var adminEmailReport = {
+      //   'sentDate': DateTime.now().toUtc().toString(),
+      //   'status': adminSendReport.toString(),
+      //   'Name': 'Zayn',
+      //   'Email': adminEmail,
+      // };
 
-      // Store the email reports in Firestore
-      var userUid =
-          FirebaseFirestore.instance.collection('user_emails').doc().id;
-      await FirebaseFirestore.instance
-          .collection('user_emails')
-          .doc(userUid)
-          .set(userEmailReport);
-
-      var adminUid =
-          FirebaseFirestore.instance.collection('admin_emails').doc().id;
-      await FirebaseFirestore.instance
-          .collection('admin_emails')
-          .doc(adminUid)
-          .set(adminEmailReport);
+      // // Store the email reports in Firestore
+      // var userUid =
+      //     FirebaseFirestore.instance.collection('user_emails').doc().id;
+      // await FirebaseFirestore.instance
+      //     .collection('user_emails')
+      //     .doc(userUid)
+      //     .set(userEmailReport);
+      //
+      // var adminUid =
+      //     FirebaseFirestore.instance.collection('admin_emails').doc().id;
+      // await FirebaseFirestore.instance
+      //     .collection('admin_emails')
+      //     .doc(adminUid)
+      //     .set(adminEmailReport);
 
       if (kDebugMode) {
         print('User Email sent successfully');

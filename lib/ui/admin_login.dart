@@ -85,12 +85,11 @@ class AdminLogin extends StatelessWidget {
                       }
                     },
                     child: Container(
-                      height: 55.h,
-                      padding: EdgeInsets.all(10),
+                      padding: EdgeInsets.all(20),
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: kblack,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(30),
                       ),
                       child: Center(
                         child: MyText(
@@ -122,7 +121,6 @@ class AdminLoginController extends GetxController {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     emailController.dispose();
     passwordController.dispose();
@@ -136,32 +134,33 @@ class AdminLoginController extends GetxController {
           backgroundColor: Colors.transparent,
           elevation: 0,
           child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: EdgeInsets.all(16),
+            child: ListTile(
+              leading: CircularProgressIndicator(
+                color: kblack,
               ),
-              padding: EdgeInsets.all(16),
-              child: ListTile(
-                leading: CircularProgressIndicator(
-                  color: kblack,
+              title: Text(
+                'Signing',
+                style: TextStyle(
+                  fontFamily: '',
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.bold,
                 ),
-                title: Text(
-                  'Loggin In',
-                  style: TextStyle(
-                    fontFamily: '',
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              subtitle: Text(
+                'Please Wait',
+                style: TextStyle(
+                  fontFamily: '',
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.normal,
                 ),
-                subtitle: Text(
-                  'Please Wait',
-                  style: TextStyle(
-                    fontFamily: '',
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-              )),
+              ),
+            ),
+          ),
         );
       },
     );
@@ -179,14 +178,16 @@ class AdminLoginController extends GetxController {
       await FirebaseAuth.instance
           .signInWithEmailAndPassword(
               email: emailController.text, password: passwordController.text)
-          .then((value) {
-        Get.offAll(() => Add_dataPage());
-        hide();
-      });
+          .then(
+        (value) {
+          Get.offAll(() => Add_dataPage());
+          hide();
+        },
+      );
 
       update();
     } on FirebaseAuthException catch (error) {
-      Get.snackbar('Error', error.toString());
+      Get.snackbar('Error', error.message!);
     } catch (e) {
       Get.snackbar('Error', e.toString());
     }

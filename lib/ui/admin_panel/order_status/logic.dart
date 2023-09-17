@@ -56,11 +56,11 @@ class OrderStatusLogic extends GetxController {
 
       historyData.assignAll(historyList);
 
-      if (kDebugMode) {
-        print('Real-time update: $selectedStatus');
-        print(
-            'Updated data: ${historyData.map((element) => element.collectionUid)}');
-      }
+      // if (kDebugMode) {
+      //   print('Real-time update: $selectedStatus');
+      //   print(
+      //       'Updated data: ${historyData.map((element) => element.collectionUid)}');
+      // }
     });
   }
 
@@ -127,15 +127,23 @@ class OrderStatusLogic extends GetxController {
 
       historyData.assignAll(historyList);
 
-      if (kDebugMode) {
-        print('pending');
-        print(historyData.map((e) => e.title));
-      }
+      // if (kDebugMode) {
+      //   print('pending');
+      //   print(historyData.map((e) => e.title));
+      // }
       update();
     } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
+      Get.snackbar(
+        '',
+        e.toString(),
+        titleText: MyText(
+          text: 'Ops!',
+          size: 16.sp,
+        ),
+      );
+      // if (kDebugMode) {
+      //   print(e.toString())
+      // }
     }
   }
 
@@ -153,15 +161,20 @@ class OrderStatusLogic extends GetxController {
 
       pendingHistory.assignAll(historyList);
 
-      if (kDebugMode) {
-        print('pending');
-        print(pendingHistory.map((e) => e.title));
-      }
+      // if (kDebugMode) {
+      //   print('pending');
+      //   print(pendingHistory.map((e) => e.title));
+      // }
       update();
     } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
+      Get.snackbar(
+        '',
+        e.toString(),
+        titleText: MyText(
+          text: 'Ops!',
+          size: 16.sp,
+        ),
+      );
     }
   }
 
@@ -179,15 +192,24 @@ class OrderStatusLogic extends GetxController {
 
       processingHistory.assignAll(historyList);
 
-      if (kDebugMode) {
-        print('processingHistory');
-        print(processingHistory.map((e) => e.title));
-      }
+      // if (kDebugMode) {
+      //   print('processingHistory');
+      //   print(processingHistory.map((e) => e.title));
+      // }
+
       update();
     } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
+      // if (kDebugMode) {
+      //   print(e.toString());
+      // }
+      Get.snackbar(
+        '',
+        e.toString(),
+        titleText: MyText(
+          text: 'Ops!',
+          size: 16.sp,
+        ),
+      );
     }
   }
 
@@ -205,15 +227,23 @@ class OrderStatusLogic extends GetxController {
 
       deliveredHistory.assignAll(historyList);
 
-      if (kDebugMode) {
-        print('deliveredHistory');
-        print(deliveredHistory.map((e) => e.title));
-      }
+      // if (kDebugMode) {
+      //   print('deliveredHistory');
+      //   print(deliveredHistory.map((e) => e.title));
+      // }
       update();
     } catch (e) {
-      if (kDebugMode) {
-        print(e.toString());
-      }
+      Get.snackbar(
+        '',
+        e.toString(),
+        titleText: MyText(
+          text: 'Ops!',
+          size: 16.sp,
+        ),
+      );
+      // if (kDebugMode) {
+      //   print(e.toString());
+      // }
     }
   }
 

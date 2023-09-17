@@ -53,11 +53,13 @@ class ReusableCard extends StatelessWidget {
               ),
             ],
           ),
+          SizedBox(height: Get.height * 0.03),
           ...List.generate(
             data.title!.length,
             (index) {
               final quantity = data.quantity![index];
               final totalPrice = data.price![index];
+
               final singleItemPrice = totalPrice / quantity;
               return Container(
                 margin: EdgeInsets.only(bottom: 15.h),

@@ -203,11 +203,13 @@ class HomePage extends StatelessWidget {
                   ),
                   child: Row(
                     children: [
-                      Image.asset(cubit.categories[index]['icon'],
-                          height: 25,
-                          color: cubit.selectedContainer == index
-                              ? Colors.white
-                              : kblack),
+                      Image.asset(
+                        cubit.categories[index]['icon'],
+                        height: 25,
+                        color: cubit.selectedContainer == index
+                            ? Colors.white
+                            : kblack,
+                      ),
                       SizedBox(width: 15.w),
                       MyText(
                         text: cubit.categories[index]['text'],

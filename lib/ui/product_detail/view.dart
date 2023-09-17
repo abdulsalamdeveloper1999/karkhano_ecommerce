@@ -45,7 +45,18 @@ class ProductDetailPage extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         bottomSheet: GestureDetector(
-          onTap: () {
+          onTap: () async {
+            List<String> imageUrls = [];
+            if (adminData != null &&
+                adminData!.adminImages != null &&
+                adminData!.adminImages!.isNotEmpty) {
+              // Select the first image URL from the adminImages list
+              String firstImageUrl = adminData!.adminImages![0].path;
+
+              // Add the selected image URL to the imageUrls list
+              imageUrls.add(firstImageUrl);
+            }
+
             if (FirebaseAuth.instance.currentUser != null) {
               final selectedProduct = ShoppingCartItemModel(
                 productName: adminData!.adminTitle!,
@@ -54,7 +65,14 @@ class ProductDetailPage extends StatelessWidget {
                 adminImages: imageUrls,
                 uid: adminData!.adminUid!,
               );
+
+              await Future.delayed(Duration.zero);
+
               _controller.addToShoppingCart(selectedProduct);
+
+              // print(
+              //     'this images are in shopping cart ${selectedProduct.adminImages}');
+
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => ShoppingCartPage(
@@ -161,7 +179,7 @@ class PageViewWidget extends StatelessWidget {
   int length;
   var imageUri;
   AdminModel? adminData;
-  final PageController _pageController = PageController();
+  final PageController _pageController = PageController(viewportFraction: 1.0);
 
   PageViewWidget(
       {required this.adminData, required this.length, required this.imageUri});
@@ -234,9 +252,7 @@ class PageViewWidget extends StatelessWidget {
             child: MyBackButtonWidget(),
           ),
           BlocConsumer<ProductDetailCubit, ProductDetailState>(
-            listener: (context, state) {
-              // TODO: implement listener
-            },
+            listener: (context, state) {},
             builder: (context, state) {
               return Positioned(
                 top: 14,

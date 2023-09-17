@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomProgressDialogWidget extends StatelessWidget {
+  CustomProgressDialogWidget({
+    this.title = 'Uploading Data',
+    this.subTitle = 'Please wait',
+  });
+  final String title;
+  final String subTitle;
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -19,7 +25,7 @@ class CustomProgressDialogWidget extends StatelessWidget {
               color: kblack,
             ),
             title: Text(
-              'Uploading Data',
+              title,
               style: TextStyle(
                 fontFamily: '',
                 fontSize: 14.sp,
@@ -27,7 +33,7 @@ class CustomProgressDialogWidget extends StatelessWidget {
               ),
             ),
             subtitle: Text(
-              'Please Wait',
+              subTitle,
               style: TextStyle(
                 fontFamily: '',
                 fontSize: 12.sp,

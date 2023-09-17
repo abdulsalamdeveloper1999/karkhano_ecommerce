@@ -25,6 +25,13 @@ class ShoppingCartPage extends StatelessWidget {
   // Instance of MessagingService for handling notifications
   @override
   Widget build(BuildContext context) {
+    // print(
+    //     'shopping cart view open and images in cart now length is ${_controller.cartItems.map((element) => element.adminImages.toList().length)} and links are ${_controller.cartItems.map((element) => element.adminImages)}');
+    print(
+        _controller.cartItems.map((element) => element.productPrice).toList());
+    print(_controller.cartItems
+        .expand((element) => element.adminImages)
+        .toList());
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -170,15 +177,15 @@ class ShoppingCartPage extends StatelessWidget {
             .get();
         if (cartItems.isNotEmpty) {
           try {
-            if (kDebugMode) {
-              debugPrint(cartItems.length.toString());
-              debugPrint(adminToken['token']);
-            }
-            _controller.uploadHistory(cartItems.first, context);
+            // if (kDebugMode) {
+            //   // debugPrint("da sa dey ${cartItems.length.toString()}");
+            //   // debugPrint(adminToken['token']);
+            // }
+            _controller.uploadHistory(context);
             _messagingService.sendNotification(adminToken);
           } catch (e) {
             if (kDebugMode) {
-              debugPrint('some error occurred');
+              debugPrint(e.toString());
             }
           }
         }

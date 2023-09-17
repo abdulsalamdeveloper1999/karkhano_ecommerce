@@ -2,7 +2,7 @@ class ShoppingCartItemModel {
   final String productName;
   int productPrice;
   int quantity;
-  List<String> adminImages;
+  final adminImages;
   String uid;
 
   ShoppingCartItemModel({

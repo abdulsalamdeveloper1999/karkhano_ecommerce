@@ -7,7 +7,7 @@ class HistoryModel {
   List? quantity;
   Timestamp? date;
   // String? time;
-  List? images;
+  final images;
   String? collectionUid;
   String? userId;
   final userEmail;
